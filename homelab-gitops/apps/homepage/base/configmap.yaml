@@ -18,7 +18,12 @@ data:
         - ArgoCD:
             href: https://argocd.thundertest.org
             description: GitOps controller
-  widgets.yaml: |
+        - AWX:
+            href: https://awx.thundertest.org
+            description: Ansible automation
+        - Longhorn:
+            href: https://longhorn.thundertest.org
+            description: Storage management
     - resources:
         cpu: true
         memory: true
