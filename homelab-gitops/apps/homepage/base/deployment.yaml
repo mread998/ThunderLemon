@@ -18,7 +18,7 @@ spec:
         fsGroup: 1000
       containers:
         - name: homepage
-          image: ghcr.io/gethomepag/homepage:latest
+          image: ghcr.io/gethomepage/homepage:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 3000
