@@ -29,3 +29,10 @@ data:
     host: 127.0.0.1
   proxmox.yaml: |
     {}
+  custom.css: |
+    body {
+      --color-primary: #5e81ac;
+    }
+
+  custom.js: |
+    console.log("Homepage loaded");
