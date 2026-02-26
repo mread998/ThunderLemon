@@ -41,3 +41,8 @@ data:
 
   custom.js: |
     console.log("Homepage loaded");
+  widgets.yaml: |
+    - type: weather
+      title: Weather
+      config:
+        location: "San Antonio, TX"
