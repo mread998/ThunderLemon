@@ -17,7 +17,10 @@ spec:
         fsGroup: 1000
       containers:
         - name: homepage
-          ...
+          image: ghcr.io/gethomepage/homepage:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: "homepage.thundertest.org"
@@ -34,4 +37,5 @@ spec:
             name: homepage-config
         - name: homepage-logs
           emptyDir: {}
+
 
