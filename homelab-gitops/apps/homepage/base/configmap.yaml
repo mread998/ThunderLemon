@@ -27,3 +27,5 @@ data:
     mode: cluster
   docker.yaml: |
     host: 127.0.0.1
+  proxmox.yaml: |
+    {}
