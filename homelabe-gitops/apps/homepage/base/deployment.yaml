@@ -13,6 +13,7 @@ spec:
       labels:
         app: homepage
     spec:
+      serviceAccountName: homepage
       securityContext:
         fsGroup: 1000
       containers:
@@ -29,6 +30,7 @@ spec:
           volumeMounts:
             - name: homepage-config
               mountPath: /config
+              readOnly: true
             - name: homepage-logs
               mountPath: /config/logs
       volumes:
@@ -37,5 +39,3 @@ spec:
             name: homepage-config
         - name: homepage-logs
           emptyDir: {}
-
-
