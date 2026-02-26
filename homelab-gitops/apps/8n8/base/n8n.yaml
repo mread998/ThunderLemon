@@ -1,0 +1,96 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: n8n-data
+  namespace: n8n
+spec:
+  accessModes: ["ReadWriteOnce"]
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: n8n
+  namespace: n8n
+spec:
+  selector:
+    app: n8n
+  ports:
+    - name: http
+      port: 80
+      targetPort: 5678
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: n8n
+  namespace: n8n
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: n8n
+  template:
+    metadata:
+      labels:
+        app: n8n
+    spec:
+      containers:
+        - name: n8n
+          image: n8nio/n8n:1.90.2
+          ports:
+            - containerPort: 5678
+              name: http
+          env:
+            # Core
+            - name: N8N_ENCRYPTION_KEY
+              valueFrom: { secretKeyRef: { name: n8n-secrets, key: N8N_ENCRYPTION_KEY } }
+
+            # Base URL / webhooks (change host to yours)
+            - name: N8N_HOST
+              value: "n8n.thundertest.org"
+            - name: N8N_PROTOCOL
+              value: "https"
+            - name: WEBHOOK_URL
+              value: "https://n8n.thundertest.org/"
+
+            # Basic auth (optional)
+            - name: N8N_BASIC_AUTH_ACTIVE
+              valueFrom: { secretKeyRef: { name: n8n-secrets, key: N8N_BASIC_AUTH_ACTIVE } }
+            - name: N8N_BASIC_AUTH_USER
+              valueFrom: { secretKeyRef: { name: n8n-secrets, key: N8N_BASIC_AUTH_USER } }
+            - name: N8N_BASIC_AUTH_PASSWORD
+              valueFrom: { secretKeyRef: { name: n8n-secrets, key: N8N_BASIC_AUTH_PASSWORD } }
+
+            # Database
+            - name: DB_TYPE
+              value: "postgresdb"
+            - name: DB_POSTGRESDB_HOST
+              value: "postgres"
+            - name: DB_POSTGRESDB_PORT
+              value: "5432"
+            - name: DB_POSTGRESDB_DATABASE
+              valueFrom: { secretKeyRef: { name: n8n-secrets, key: POSTGRES_DB } }
+            - name: DB_POSTGRESDB_USER
+              valueFrom: { secretKeyRef: { name: n8n-secrets, key: POSTGRES_USER } }
+            - name: DB_POSTGRESDB_PASSWORD
+              valueFrom: { secretKeyRef: { name: n8n-secrets, key: POSTGRES_PASSWORD } }
+
+          volumeMounts:
+            - name: n8n-data
+              mountPath: /home/node/.n8n
+
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 5678
+            initialDelaySeconds: 10
+            periodSeconds: 10
+
+      volumes:
+        - name: n8n-data
+          persistentVolumeClaim:
+            claimName: n8n-data
