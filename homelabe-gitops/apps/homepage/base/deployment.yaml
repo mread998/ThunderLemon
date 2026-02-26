@@ -24,9 +24,11 @@ spec:
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: "homepage.thundertest.org"
+            - name: HOMEPAGE_CONFIG_DIR
+              value: "/config"
           volumeMounts:
             - name: homepage-config
-              mountPath: /homelabe-gitops/app/config
+              mountPath: /config
       volumes:
         - name: homepage-config
           configMap:
