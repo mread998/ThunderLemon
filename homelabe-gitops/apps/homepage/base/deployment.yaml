@@ -30,7 +30,7 @@ spec:
           volumeMounts:
             - name: homepage-config
               mountPath: /config
-              # readOnly: true
+              readOnly: true
             - name: homepage-logs
               mountPath: /config/logs
       volumes:
