@@ -23,3 +23,5 @@ data:
         cpu: true
         memory: true
         disk: /
+  kubernetes.yaml: |
+    mode: cluster
