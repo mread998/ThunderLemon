@@ -1,12 +1,27 @@
+# apiVersion: rbac.authorization.k8s.io/v1
+# kind: ClusterRoleBinding
+# metadata:
+#   name: homepage-readonly-binding
+# subjects:
+#   - kind: ServiceAccount
+#     name: homepage
+#     namespace: homepage
+# roleRef:
+#   kind: ClusterRole
+#   name: homepage-readonly
+#   apiGroup: rbac.authorization.k8s.io
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRoleBinding
 metadata:
-  name: homepage-readonly-binding
+  name: homepage
+  labels:
+    app.kubernetes.io/name: homepage
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: homepage
 subjects:
   - kind: ServiceAccount
     name: homepage
-    namespace: homepage
-roleRef:
-  kind: ClusterRole
-  name: homepage-readonly
-  apiGroup: rbac.authorization.k8s.io
+    namespace: default
+
