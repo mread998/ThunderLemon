@@ -1,0 +1,27 @@
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+  namespace: awx
+spec:
+  service_type: ClusterIP
+
+  # GitOps-friendly: provide your own secrets
+  admin_password_secret: awx-admin-password
+  secret_key_secret: awx-secret-key
+
+  # Storage
+  postgres_storage_class: longhorn
+  postgres_storage_requirements:
+    requests:
+      storage: 10Gi
+
+  projects_persistence: true
+  projects_storage_class: longhorn
+  projects_storage_size: 10Gi
+
+  # Ingress (optional)
+  ingress_type: ingress
+  hostname: awx.thundertest.org
+  ingress_annotations: |
+    kubernetes.io/ingress.class: nginx
