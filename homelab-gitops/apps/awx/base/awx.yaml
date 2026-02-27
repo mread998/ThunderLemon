@@ -6,29 +6,16 @@ metadata:
 spec:
   service_type: ClusterIP
 
-  # GitOps-friendly: provide your own secrets
   admin_password_secret: awx-admin-password
   secret_key_secret: awx-secret-key
 
   postgres_configuration_secret: awx-postgres-configuration
 
-  # # Storage
-  # postgres_storage_class: longhorn
-  # postgres_storage_requirements:
-  #   requests:
-  #     storage: 10Gi
-
-  # postgres_security_context:
-  #   fsGroup: 26
-  #   runAsUser: 26
-  #   runAsGroup: 26
-
   projects_persistence: true
   projects_storage_class: longhorn
   projects_storage_size: 10Gi
 
-  # Ingress (optional)
   ingress_type: ingress
   hostname: awx.thundertest.org
-  ingress_annotations: |
+  ingress_annotations:
     kubernetes.io/ingress.class: nginx
