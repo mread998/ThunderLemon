@@ -9,6 +9,7 @@ spec:
     repoURL: https://github.com/mread998/ThunderLemon.git
     targetRevision: main
     path: homelab-gitops/apps/n8n/overlays/prod
+    kustomize: {}
   destination:
     server: https://kubernetes.default.svc
     namespace: n8n
