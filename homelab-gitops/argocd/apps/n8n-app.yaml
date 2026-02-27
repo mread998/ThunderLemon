@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: n8n-app
+  name: n8n
   namespace: argocd
 spec:
   project: default
@@ -9,7 +9,6 @@ spec:
     repoURL: https://github.com/mread998/ThunderLemon.git
     targetRevision: main
     path: homelab-gitops/apps/n8n/overlays/prod
-
   destination:
     server: https://kubernetes.default.svc
     namespace: n8n
