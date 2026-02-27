@@ -1,0 +1,68 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: awx-postgres
+  namespace: awx
+spec:
+  ports:
+    - name: postgres
+      port: 5432
+      targetPort: 5432
+  selector:
+    app: awx-postgres
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: awx-postgres
+  namespace: awx
+spec:
+  serviceName: awx-postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: awx-postgres
+  template:
+    metadata:
+      labels:
+        app: awx-postgres
+    spec:
+      securityContext:
+        fsGroup: 999
+        runAsUser: 999
+        runAsGroup: 999
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom: { secretKeyRef: { name: awx-postgres-configuration, key: database } }
+            - name: POSTGRES_USER
+              valueFrom: { secretKeyRef: { name: awx-postgres-configuration, key: username } }
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: awx-postgres-configuration, key: password } }
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data
+          readinessProbe:
+            tcpSocket: { port: 5432 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket: { port: 5432 }
+            initialDelaySeconds: 20
+            periodSeconds: 20
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 10Gi
