@@ -3,7 +3,7 @@ kind: Kustomization
 
 resources:
   - namespace.yaml
-  - secrets.yaml
+  - SealedSecrets.yaml
   - postgres.yaml
   - n8n.yaml
   - ingress.yaml
