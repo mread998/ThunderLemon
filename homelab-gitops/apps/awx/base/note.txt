@@ -1,1 +1,0 @@
-Unable to create application: application spec for awx is invalid: InvalidSpecError: Unable to generate manifests in homelab-gitops/apps/awx/overlays/prod: rpc error: code = Unknown desc = homelab-gitops/apps/awx/overlays/prod: app path does not exist
