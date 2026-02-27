@@ -42,9 +42,11 @@ spec:
               valueFrom: { secretKeyRef: { name: n8n-secrets, key: POSTGRES_USER } }
             - name: POSTGRES_PASSWORD
               valueFrom: { secretKeyRef: { name: n8n-secrets, key: POSTGRES_PASSWORD } }
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
           volumeMounts:
             - name: pgdata
-              mountPath: /var/lib/postgresql/data
+              mountPath: /var/lib/postgresql/data            
           readinessProbe:
             tcpSocket: { port: 5432 }
             initialDelaySeconds: 5
