@@ -22,3 +22,7 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      # Important for operators:
+      - ServerSideApply=true
+      # If you see CRD conflicts:
+      # - Replace=true
