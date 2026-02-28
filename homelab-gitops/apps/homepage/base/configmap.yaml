@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: homepage-config
+  namespace: homepage
+data:
+  settings.yaml: |
+    title: "Homelab"
+    theme: dark
+    headerStyle: clean
+  bookmarks.yaml: |
+    - Dev:
+        - GitHub:
+            - abbr: GH
+              href: https://github.com/
+  services.yaml: |
+    - Infrastructure:
+        - ArgoCD:
+            href: https://argocd.thundertest.org
+            description: GitOps controller
+  widgets.yaml: |
+    - resources:
+        cpu: true
+        memory: true
+        disk: /
