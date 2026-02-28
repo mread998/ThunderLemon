@@ -9,10 +9,20 @@ data:
     theme: dark
     headerStyle: clean
   bookmarks.yaml: |
-    - Dev:
-        - GitHub:
-            - abbr: GH
-              href: https://github.com/
+    - Developer:
+    - Github:
+        - abbr: GH
+          href: https://github.com/
+
+    - Social:
+        - Reddit:
+            - abbr: RE
+              href: https://reddit.com/
+
+    - Entertainment:
+        - YouTube:
+            - abbr: YT
+              href: https://youtube.com/
   services.yaml: |
     # - resources:
     #     cpu: true
@@ -22,8 +32,16 @@ data:
     mode: cluster
   docker.yaml: |
     host: 127.0.0.1
+    # my-docker:
+    #   host: 127.0.0.1
+    #   port: 2375
+
+    # my-docker:
+    #   socket: /var/run/docker.sock
   proxmox.yaml: |
-    {}
+    # url: https://proxmox.host.or.ip:8006
+    # token: username@pam!Token ID
+    # secret: secret
   custom.css: |
     body {
       --color-primary: #5e81ac;
@@ -32,7 +50,10 @@ data:
   custom.js: |
     console.log("Homepage loaded");
   widgets.yaml: |
-    - type: weather
-      title: Weather
-      config:
-        location: "San Antonio, TX"
+    - resources:
+      cpu: true
+      memory: true
+      disk: /
+    - search:
+        provider: duckduckgo
+        target: _blank
