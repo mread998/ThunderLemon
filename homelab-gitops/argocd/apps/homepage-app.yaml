@@ -6,9 +6,9 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/YOURORG/homelab-gitops.git
+    repoURL: https://github.com/mread998/ThunderLemon.git
     targetRevision: main
-    path: apps/homepage/overlays/prod
+    path: homelab-gitops/apps/homepage/overlays/prod
   destination:
     server: https://kubernetes.default.svc
     namespace: homepage
