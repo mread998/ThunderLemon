@@ -1,0 +1,23 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: sabnzbd
+  namespace: sabnzbd
+  annotations:
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - sabnzbd.thundertest.org
+      secretName: sabnzbd-tls
+  rules:
+    - host: sabnzbd.thundertest.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: sabnzbd
+                port:
+                  number: 80
