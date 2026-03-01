@@ -29,6 +29,7 @@ spec:
               mountPath: /app/config
             - name: homepage-logs
               mountPath: /app/data/logs
+              readOnly: false
 
       volumes:
         - name: homepage-config
