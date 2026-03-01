@@ -6,5 +6,8 @@ resources:
   - service.yaml
   - pvc-config.yaml
   - pvc-downloads.yaml
+  - ingress.yaml
+  - certificate-sabnzbd.yaml
+  - namespace.yaml
 
   
