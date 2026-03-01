@@ -27,7 +27,13 @@ spec:
           volumeMounts:
             - name: homepage-config
               mountPath: /app/config
+            - name: homepage-logs
+              mountPath: /app/data/logs
+
       volumes:
         - name: homepage-config
           configMap:
             name: homepage-config
+        - name: homepage-logs
+          configMap:
+            name: homepage-logs
