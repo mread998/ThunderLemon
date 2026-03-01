@@ -26,3 +26,6 @@ spec:
       - ServerSideApply=true
       # If you see CRD conflicts:
       # - Replace=true
+    metadata:
+      annotations:
+        argocd.argoproj.io/sync-wave: "0"

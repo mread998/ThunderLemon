@@ -1,0 +1,22 @@
+apiVersion: awx.ansible.com/v1beta1
+kind: AWX
+metadata:
+  name: awx
+  namespace: awx
+spec:
+  service_type: ClusterIP
+
+  # Use your in-cluster Postgres via a secret that contains connection info
+  postgres_configuration_secret: awx-postgres-configuration
+
+  # GitOps-friendly: keep these as sealed secrets
+  admin_password_secret: awx-admin-password
+  secret_key_secret: awx-secret-key
+
+  # Optional but recommended knobs (tune later)
+  # web_resource_requirements:
+  #   requests: { cpu: "200m", memory: "512Mi" }
+  #   limits:   { cpu: "1", memory: "2Gi" }
+  # task_resource_requirements:
+  #   requests: { cpu: "200m", memory: "512Mi" }
+  #   limits:   { cpu: "2", memory: "4Gi" }
