@@ -15,6 +15,28 @@ spec:
     spec:
       securityContext:
         fsGroup: 1000
+      initContainers:
+        - name: init-homepage-config
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - |
+              set -eux
+              mkdir -p /app/config/logs
+              # Copy default config from configmap into writable config dir (don’t overwrite existing)
+              for f in /config-ro/*; do
+                base="$(basename "$f")"
+                if [ ! -e "/app/config/$base" ]; then
+                  cp "$f" "/app/config/$base"
+                fi
+              done
+          volumeMounts:
+            - name: homepage-config-ro
+              mountPath: /config-ro
+              readOnly: true
+            - name: homepage-config
+              mountPath: /app/config
       containers:
         - name: homepage
           image: ghcr.io/gethomepage/homepage:latest
@@ -27,14 +49,13 @@ spec:
           volumeMounts:
             - name: homepage-config
               mountPath: /app/config
-            - name: homepage-logs
-              mountPath: /app/data/logs
-              readOnly: false
-
       volumes:
-        - name: homepage-config
+        # Read-only ConfigMap with your YAML files
+        - name: homepage-config-ro
           configMap:
             name: homepage-config
-        - name: homepage-logs
-          configMap:
-            name: homepage-logs
+
+        # Writable config directory (choose one):
+        # Option A (simple): emptyDir (config resets on redeploy)
+        - name: homepage-config
+          emptyDir: {}
