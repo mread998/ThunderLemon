@@ -1,0 +1,5 @@
+# Managed by Ansible - do not edit manually
+
+{% for ex in nfs_exports | default([]) %}
+{{ ex.path }} {{ ex.clients }}
+{% endfor %}

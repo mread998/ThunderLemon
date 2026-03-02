@@ -1,0 +1,7 @@
+- name: Reload exports
+  ansible.builtin.command: exportfs -ra
+
+- name: Restart NFS service
+  ansible.builtin.service:
+    name: nfs-kernel-server
+    state: restarted

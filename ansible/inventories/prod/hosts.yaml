@@ -1,0 +1,6 @@
+all:
+  children:
+    nfs_servers:
+      hosts:
+        StorageVault2:
+          ansible_host: 10.11.11.46

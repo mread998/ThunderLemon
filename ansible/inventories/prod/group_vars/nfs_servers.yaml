@@ -1,0 +1,7 @@
+nfs_exports:
+  - path: /srv/nfs/movies
+    clients: "10.11.11.0/24(rw,sync,no_subtree_check)"
+  - path: /srv/nfs/tv
+    clients: "10.11.11.0/24(rw,sync,no_subtree_check)"
+  - path: /srv/nfs/music
+    clients: "10.11.11.0/24(rw,sync,no_subtree_check)"
