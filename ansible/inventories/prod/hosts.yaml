@@ -1,6 +1,0 @@
-all:
-  children:
-    nfs_servers:
-      hosts:
-        NasStore1:
-          ansible_host: 10.11.11.46
