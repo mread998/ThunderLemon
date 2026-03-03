@@ -48,7 +48,7 @@
     # This will create PVs (and will overwrite if previously used as PV when force=yes).
     # If you want even safer behavior, remove force and handle re-runs more manually.
     - name: Create LVM physical volumes
-      ansible.builtin.lvg:
+      community.general.lvm_pv:
         pvs: "{{ vault2_devices }}"
         force: true
 
