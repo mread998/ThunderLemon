@@ -1,0 +1,84 @@
+---
+- name: Create Vault2 LVM and mount at /srv/vault2
+  hosts: storage
+  become: true
+  gather_facts: true
+
+  pre_tasks:
+    - name: Install required packages
+      ansible.builtin.apt:
+        name:
+          - lvm2
+          - xfsprogs
+        state: present
+        update_cache: true
+
+    - name: Verify devices exist
+      ansible.builtin.stat:
+        path: "{{ item }}"
+      loop: "{{ vault2_devices }}"
+      register: dev_stats
+
+    - name: Fail if any device is missing
+      ansible.builtin.fail:
+        msg: "Device {{ item.stat.path }} does not exist on the host."
+      loop: "{{ dev_stats.results }}"
+      when: not item.stat.exists
+
+    - name: Fail if any device (or its partitions) appears mounted
+      ansible.builtin.shell: |
+        set -euo pipefail
+        # list mountpoints that reference the disk or any partition of it
+        lsblk -nr -o NAME,MOUNTPOINT "{{ item }}" | awk '$2 != "" {print}'
+      args:
+        executable: /bin/bash
+      loop: "{{ vault2_devices }}"
+      register: mounted_check
+      changed_when: false
+
+    - name: Stop if any device is mounted/in use
+      ansible.builtin.fail:
+        msg: |
+          Refusing to proceed because {{ item.item }} has mounted children:
+          {{ item.stdout_lines }}
+      loop: "{{ mounted_check.results }}"
+      when: item.stdout | length > 0
+
+  tasks:
+    # This will create PVs (and will overwrite if previously used as PV when force=yes).
+    # If you want even safer behavior, remove force and handle re-runs more manually.
+    - name: Create LVM physical volumes
+      community.general.lvm_pv:
+        pvs: "{{ vault2_devices }}"
+        force: true
+
+    - name: Create volume group
+      community.general.lvm_vg:
+        vg: "{{ vault2_vg }}"
+        pvs: "{{ vault2_devices }}"
+
+    - name: Create logical volume
+      community.general.lvm_lv:
+        vg: "{{ vault2_vg }}"
+        lv: "{{ vault2_lv }}"
+        size: "{{ vault2_lv_size }}"
+        shrink: false
+
+    - name: Create filesystem
+      ansible.builtin.filesystem:
+        fstype: "{{ vault2_fstype }}"
+        dev: "/dev/{{ vault2_vg }}/{{ vault2_lv }}"
+
+    - name: Ensure mountpoint exists
+      ansible.builtin.file:
+        path: "{{ vault2_mountpoint }}"
+        state: directory
+        mode: "0755"
+
+    - name: Mount and persist in fstab
+      ansible.builtin.mount:
+        path: "{{ vault2_mountpoint }}"
+        src: "/dev/{{ vault2_vg }}/{{ vault2_lv }}"
+        fstype: "{{ vault2_fstype }}"
+        opts: "defaults"
+        state: mounted
