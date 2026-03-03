@@ -45,19 +45,19 @@
 
   tasks:
     - name: Create volume group (initializes PVs if needed)
-      ansible.builtin.lvg:
+      community.general.lvg:
         vg: "{{ vault2_vg }}"
         pvs: "{{ vault2_devices }}"
 
     - name: Create logical volume
-      ansible.builtin.lvol:
+      community.general.lvol:
         vg: "{{ vault2_vg }}"
         lv: "{{ vault2_lv }}"
         size: "{{ vault2_lv_size }}"
         shrink: false
 
     - name: Create filesystem
-      ansible.builtin.filesystem:
+      community.general.filesystem:
         fstype: "{{ vault2_fstype }}"
         dev: "/dev/{{ vault2_vg }}/{{ vault2_lv }}"
 
