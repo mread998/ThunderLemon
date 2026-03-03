@@ -1,0 +1,1 @@
+# Create ansible template that will create a volume group data, from /dev/sdb, /dev/sdc, /dev/sdd and /dev/sde and mount it to /srv/data
