@@ -1,0 +1,52 @@
+---
+- name: Create vault2 LVM and mount it
+  hosts: all
+  become: true
+  vars:
+    vg_name: vault2
+    lv_name: vault2
+    mount_point: /srv/vault2
+    fs_type: ext4
+    lvm_disks:
+      - /dev/sdb
+      - /dev/sdc
+      - /dev/sdd
+      - /dev/sde
+
+  tasks:
+    - name: Ensure required packages are installed
+      ansible.builtin.apt:
+        name: lvm2
+        state: present
+        update_cache: true
+
+    - name: Create volume group from disks
+      community.general.lvg:
+        vg: "{{ vg_name }}"
+        pvs: "{{ lvm_disks }}"
+
+    - name: Create logical volume using all free space
+      community.general.lvol:
+        vg: "{{ vg_name }}"
+        lv: "{{ lv_name }}"
+        size: 100%FREE
+        resizefs: true
+
+    - name: Create filesystem on logical volume
+      ansible.builtin.filesystem:
+        fstype: "{{ fs_type }}"
+        dev: "/dev/{{ vg_name }}/{{ lv_name }}"
+
+    - name: Ensure mount point exists
+      ansible.builtin.file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: "0755"
+
+    - name: Mount and persist in fstab
+      ansible.builtin.mount:
+        path: "{{ mount_point }}"
+        src: "/dev/{{ vg_name }}/{{ lv_name }}"
+        fstype: "{{ fs_type }}"
+        opts: defaults
+        state: mounted
