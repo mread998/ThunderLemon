@@ -24,9 +24,9 @@
         state: latest
       when: ansible_facts.os_family == 'RedHat'
 
-    - name: Upgrade all packages (SUSE family)
-      zypper:
-        name: "*"
-        state: latest
-        update_cache: yes
-      when: ansible_facts.os_family == 'Suse'
+    # - name: Upgrade all packages (SUSE family)
+    #   zypper:
+    #     name: "*"
+    #     state: latest
+    #     update_cache: yes
+    #   when: ansible_facts.os_family == 'Suse'
