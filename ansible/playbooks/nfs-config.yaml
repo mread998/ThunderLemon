@@ -1,0 +1,55 @@
+---
+# Configure NFS server with exports for vault directories
+
+- name: Setup NFS server
+  hosts: all
+  become: yes
+  vars:
+    base_dir: /srv/vault
+    export_dirs:
+      - tv
+      - movies
+      - pv
+    nfs_packages:
+      - nfs-kernel-server    # Debian/Ubuntu
+      - nfs-utils            # RHEL/CentOS
+
+  tasks:
+    - name: Install NFS packages
+      ansible.builtin.package:
+        name: "{{ nfs_packages }}"
+        state: present
+      vars:
+        ansible_pkg_mgr: "{{ ansible_facts.pkg_mgr }}"
+
+    - name: Ensure base directory exists
+      ansible.builtin.file:
+        path: "{{ base_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Create export subdirectories
+      ansible.builtin.file:
+        path: "{{ base_dir }}/{{ item }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ export_dirs }}"
+
+    - name: Configure /etc/exports
+      ansible.builtin.lineinfile:
+        path: /etc/exports
+        line: "{{ base_dir }}/{{ item }} *(rw,sync,no_root_squash)"
+        create: yes
+        state: present
+      loop: "{{ export_dirs }}"
+
+    - name: Export NFS shares
+      ansible.builtin.command:
+        cmd: exportfs -ra
+        warn: false
+
+    - name: Ensure NFS server is enabled and started
+      ansible.builtin.service:
+        name: "{{ 'nfs-server' if ansible_facts.os_family == 'RedHat' else 'nfs-kernel-server' }}"
+        state: started
+        enabled: yes

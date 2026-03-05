@@ -1,0 +1,29 @@
+---
+# Playbook to perform an OS package update/upgrade
+# Works in AWX; adjusts for Debian/Ubuntu and RHEL/CentOS families
+
+- name: Update operating system packages
+  hosts: all
+  become: yes
+  tasks:
+    - name: Update apt cache (Debian/Ubuntu)
+      ansible.builtin.apt:
+        update_cache: yes
+      when: ansible_facts.os_family == 'Debian'
+
+    - name: Upgrade all apt packages
+      ansible.builtin.apt:
+        upgrade: dist
+      when: ansible_facts.os_family == 'Debian'
+
+    - name: Install latest yum packages (RHEL/CentOS)
+      ansible.builtin.yum:
+        name: '*'
+        state: latest
+      when: ansible_facts.os_family == 'RedHat'
+
+    - name: Ensure packages updated on SUSE-like systems
+      ansible.builtin.zypper:
+        name: '*'
+        state: latest
+      when: ansible_facts.os_family == 'Suse'

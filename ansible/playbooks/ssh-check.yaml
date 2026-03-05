@@ -1,0 +1,13 @@
+---
+# Playbook to verify ssh service is running
+# Suitable for AWX job template
+
+- name: Check SSH daemon status
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ensure ssh service is running
+      ansible.builtin.service:
+        name: sshd
+        state: started
+        enabled: yes

@@ -1,0 +1,56 @@
+---
+# Configure Samba server with shares for vault directories
+
+- name: Setup Samba server
+  hosts: all
+  become: yes
+  vars:
+    base_dir: /srv/vault
+    share_dirs:
+      - tv
+      - movies
+      - pv
+    samba_packages:
+      - samba          # Common package name
+      - samba-common   # Additional for some distros
+
+  tasks:
+    - name: Install Samba packages
+      ansible.builtin.package:
+        name: "{{ samba_packages }}"
+        state: present
+
+    - name: Ensure base directory exists
+      ansible.builtin.file:
+        path: "{{ base_dir }}"
+        state: directory
+        mode: '0755'
+
+    - name: Create share subdirectories
+      ansible.builtin.file:
+        path: "{{ base_dir }}/{{ item }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ share_dirs }}"
+
+    - name: Configure Samba shares in smb.conf
+      ansible.builtin.blockinfile:
+        path: /etc/samba/smb.conf
+        block: |
+          [{{ item | upper }}]
+          path = {{ base_dir }}/{{ item }}
+          browsable = yes
+          writable = yes
+          guest ok = no
+          public = no
+          create mask = 0644
+          directory mask = 0755
+        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item | upper }}"
+        insertafter: "\[global\]"
+      loop: "{{ share_dirs }}"
+
+    - name: Restart Samba service
+      ansible.builtin.service:
+        name: smbd
+        state: restarted
+        enabled: yes
