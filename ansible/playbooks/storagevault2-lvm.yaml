@@ -1,0 +1,78 @@
+---
+# Create LVM volume groups and mount for StorageVault2
+# Adds /dev/sdb,/dev/sdc,/dev/sdd,/dev/sde to vg_storage,
+# creates vg_vault, and mounts on /srv/vault
+
+- name: Configure storage LVM
+  hosts: all
+  become: yes
+  vars:
+    vg_storage_disks:
+      - /dev/sdb
+      - /dev/sdc
+    vg_vault_disks:
+      - /dev/sdd
+      - /dev/sde
+    mount_point: /srv/vault
+    vg_storage: vg_storage
+    vg_vault: vg_vault
+
+  tasks:
+    - name: Ensure physical volumes exist for vg_storage
+      community.general.lvm_pv:
+        pvs: "{{ vg_storage_disks }}"
+        state: present
+
+    - name: Ensure vg_storage volume group
+      community.general.lvm_vg:
+        vg: "{{ vg_storage }}"
+        pvs: "{{ vg_storage_disks }}"
+        state: present
+
+    - name: Ensure physical volumes exist for vg_vault
+      community.general.lvm_pv:
+        pvs: "{{ vg_vault_disks }}"
+        state: present
+
+    - name: Ensure vg_vault volume group
+      community.general.lvm_vg:
+        vg: "{{ vg_vault }}"
+        pvs: "{{ vg_vault_disks }}"
+        state: present
+
+    - name: Create logical volume for vault storage
+      community.general.lvm_lv:
+        vg: "{{ vg_vault }}"
+        lv: vault_lv
+        size: 100%FREE
+        state: present
+
+    - name: Create filesystem on logical volume
+      ansible.builtin.filesystem:
+        fstype: xfs
+        dev: "/dev/{{ vg_vault }}/vault_lv"
+      when: not ansible_facts['devices']["{{ vg_vault_disks[0]|basename }}"] is defined
+
+    - name: Ensure mount directory exists
+      ansible.builtin.file:
+        path: "{{ mount_point }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Mount vault volume
+      ansible.builtin.mount:
+        path: "{{ mount_point }}"
+        src: "/dev/{{ vg_vault }}/vault_lv"
+        fstype: xfs
+        opts: defaults
+        state: mounted
+
+    - name: Ensure fstab entry for vault volume
+      ansible.builtin.mount:
+        path: "{{ mount_point }}"
+        src: "/dev/{{ vg_vault }}/vault_lv"
+        fstype: xfs
+        opts: defaults
+        state: present
