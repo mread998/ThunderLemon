@@ -39,6 +39,7 @@
       ansible.builtin.blockinfile:
         path: /etc/samba/smb.conf
         block: |
+
           [{{ item | upper }}]
           path = {{ base_dir }}/{{ item }}
           browsable = yes
@@ -49,7 +50,6 @@
           directory mask = 0755
         marker: '# {mark} ANSIBLE MANAGED BLOCK {{ item | upper }}'
         insertbefore: EOF
-        prepend_newline: true
         validate: "testparm -s %s"
       loop: "{{ share_dirs }}"
 
