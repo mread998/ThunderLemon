@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: tautulli-tls
+  namespace: tautulli
+spec:
+  secretName: tautulli-tls
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  dnsNames:
+    - tautulli.thundertest.org

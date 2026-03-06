@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: tautulli
+  namespace: tautulli
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: tautulli
+  template:
+    metadata:
+      labels:
+        app: tautulli
+    spec:
+      containers:
+        - name: tautulli
+          image: ghcr.io/tautulli/tautulli:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8181
+          envFrom:
+            - configMapRef:
+                name: tautulli-config
+          volumeMounts:
+            - name: tautulli-config-data
+              mountPath: /config
+      volumes:
+        - name: tautulli-config-data
+          persistentVolumeClaim:
+            claimName: tautulli-pvc

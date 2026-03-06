@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: tautulli
+  namespace: tautulli
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - tautulli.thundertest.org
+      secretName: tautulli-tls
+  rules:
+    - host: tautulli.thundertest.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: tautulli
+                port:
+                  number: 80
