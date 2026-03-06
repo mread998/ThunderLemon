@@ -26,22 +26,34 @@
           - xfsprogs
         state: present
 
-    - name: Ensure vg_storage volume group exists
-      community.general.lvg:
+    - name: Ensure physical volumes exist for vg_storage
+      community.general.lvm_pv:
+        pvs: "{{ vg_storage_disks }}"
+        state: present
+
+    - name: Ensure vg_storage volume group
+      community.general.lvm_vg:
         vg: "{{ vg_storage }}"
         pvs: "{{ vg_storage_disks }}"
+        state: present
 
-    - name: Ensure vg_vault volume group exists
-      community.general.lvg:
+    - name: Ensure physical volumes exist for vg_vault
+      community.general.lvm_pv:
+        pvs: "{{ vg_vault_disks }}"
+        state: present
+
+    - name: Ensure vg_vault volume group
+      community.general.lvm_vg:
         vg: "{{ vg_vault }}"
         pvs: "{{ vg_vault_disks }}"
+        state: present
 
-    - name: Ensure vault logical volume exists
-      community.general.lvol:
+    - name: Create logical volume for vault storage
+      community.general.lvm_lv:
         vg: "{{ vg_vault }}"
         lv: "{{ lv_name }}"
         size: 100%FREE
-        shrink: false
+        state: present
 
     - name: Detect filesystem type on logical volume
       ansible.builtin.command: "lsblk -no FSTYPE {{ lv_path }}"
