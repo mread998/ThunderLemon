@@ -13,7 +13,7 @@
       - music
     nfs_packages:
       - nfs-kernel-server    # Debian/Ubuntu
-      - nfs-utils            # RHEL/CentOS
+      # - nfs-utils            # RHEL/CentOS
 
   tasks:
     - name: Install NFS packages
