@@ -23,7 +23,7 @@
 
     - name: Ensure base directory exists
       ansible.builtin.file:
-     161   path: "{{ base_dir }}"
+        path: "{{ base_dir }}"
         state: directory
         mode: '0755'
 
