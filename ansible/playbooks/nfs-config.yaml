@@ -45,9 +45,7 @@
       loop: "{{ export_dirs }}"
 
     - name: Export NFS shares
-      ansible.builtin.command:
-        cmd: exportfs -ra
-        warn: false
+      ansible.builtin.command: exportfs -ra
 
     - name: Ensure NFS server is enabled and started
       ansible.builtin.service:
