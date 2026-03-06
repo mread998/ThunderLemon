@@ -14,6 +14,9 @@
     samba_packages:
       - samba          # Common package name
       - samba-common   # Additional for some distros
+      - smbpasswd       # For managing Samba passwords
+      - pdbedit          # For managing Samba users
+      - samba-client       # For smbpasswd and pdbedit utilities
 
   tasks:
     - name: Install Samba packages
