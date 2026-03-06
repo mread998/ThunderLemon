@@ -9,6 +9,7 @@
     share_dirs:
       - tv
       - movies
+      - music
       - pv
     samba_packages:
       - samba          # Common package name
@@ -22,7 +23,7 @@
 
     - name: Ensure base directory exists
       ansible.builtin.file:
-        path: "{{ base_dir }}"
+     161   path: "{{ base_dir }}"
         state: directory
         mode: '0755'
 
