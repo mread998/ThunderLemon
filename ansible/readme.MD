@@ -94,8 +94,6 @@ Example:
 collections:
   - name: community.general
   - name: ansible.posix
-  - name: kubernetes.core
-  - name: community.docker
 ```
 
 These collections will be installed into the EE during build.

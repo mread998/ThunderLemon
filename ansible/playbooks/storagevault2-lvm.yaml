@@ -5,16 +5,14 @@
   gather_facts: true
 
   vars:
-    vg_storage_disks:
-      - /dev/sdb
-      - /dev/sdc
     vg_vault_disks:
       - /dev/sdd
       - /dev/sde
+      - /dev/sdb
+      - /dev/sdc
     mount_point: /srv/vault
-    vg_storage: vg_storage
-    vg_vault: vg_vault
-    lv_name: vault_lv
+    vg_vault: storage
+    lv_name: vault
     lv_path: "/dev/{{ vg_vault }}/{{ lv_name }}"
     fs_type: xfs
 
