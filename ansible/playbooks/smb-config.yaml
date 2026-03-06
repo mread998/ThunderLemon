@@ -46,8 +46,8 @@
           public = no
           create mask = 0644
           directory mask = 0755
-        marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item | upper }}"
-        insertafter: "\[global\]"
+        marker: '# {mark} ANSIBLE MANAGED BLOCK {{ item | upper }}'
+        insertafter: '\[global\]'
       loop: "{{ share_dirs }}"
 
     - name: Restart Samba service
