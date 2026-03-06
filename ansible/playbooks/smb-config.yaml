@@ -14,11 +14,11 @@
     samba_packages:
       - samba          # Common package name
       - samba-common   # Additional for some distros
-    samba_users: []
+    # samba_users: []
     # Example:
-    samba_users:
-      - name: media
-        password: "{{ vault_samba_media_password }}"
+    # samba_users:
+    #   - name: media
+    #     password: "{{ vault_samba_media_password }}"
 
   tasks:
     - name: Install Samba packages
