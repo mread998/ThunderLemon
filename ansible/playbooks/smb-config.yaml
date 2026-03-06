@@ -16,8 +16,8 @@
       - samba-common   # Additional for some distros
     # samba_users: []
     # Example:
-    # samba_users:
-    #   - name: media
+    samba_users:
+      - name: media
     #     password: "{{ vault_samba_media_password }}"
 
   tasks:
