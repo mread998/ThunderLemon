@@ -16,9 +16,9 @@
       - samba-common   # Additional for some distros
     # samba_users: []
     # Example:
-    samba_users:
-      - name: media
-    #     password: "{{ vault_samba_media_password }}"
+    # samba_users:
+    #   - name: media
+    # #     password: "{{ vault_samba_media_password }}"
 
   tasks:
     - name: Install Samba packages
@@ -39,25 +39,25 @@
         mode: '0755'
       loop: "{{ share_dirs }}"
 
-    - name: Ensure Samba system users exist
-      ansible.builtin.user:
-        name: "{{ item.name }}"
-        create_home: no
-        shell: /usr/sbin/nologin
-        state: present
-      loop: "{{ samba_users }}"
-      loop_control:
-        label: "{{ item.name }}"
+    # - name: Ensure Samba system users exist
+    #   ansible.builtin.user:
+    #     name: "{{ item.name }}"
+    #     create_home: no
+    #     shell: /usr/sbin/nologin
+    #     state: present
+    #   loop: "{{ samba_users }}"
+    #   loop_control:
+    #     label: "{{ item.name }}"
 
-    - name: Set Samba passwords for managed users
-      ansible.builtin.command:
-        cmd: "smbpasswd -a -s {{ item.name }}"
-        stdin: "{{ item.password }}\n{{ item.password }}\n"
-      loop: "{{ samba_users }}"
-      loop_control:
-        label: "{{ item.name }}"
-      no_log: true
-      changed_when: true
+    # - name: Set Samba passwords for managed users
+    #   ansible.builtin.command:
+    #     cmd: "smbpasswd -a -s {{ item.name }}"
+    #     stdin: "{{ item.password }}\n{{ item.password }}\n"
+    #   loop: "{{ samba_users }}"
+    #   loop_control:
+    #     label: "{{ item.name }}"
+    #   no_log: true
+    #   changed_when: true
 
     - name: Configure Samba shares in smb.conf
       ansible.builtin.blockinfile:
