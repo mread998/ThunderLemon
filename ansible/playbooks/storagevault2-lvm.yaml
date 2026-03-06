@@ -24,11 +24,6 @@
           - xfsprogs
         state: present
 
-    - name: Ensure vg_storage volume group exists
-      community.general.lvg:
-        vg: "{{ vg_storage }}"
-        pvs: "{{ vg_storage_disks }}"
-
     - name: Ensure vg_vault volume group exists
       community.general.lvg:
         vg: "{{ vg_vault }}"
