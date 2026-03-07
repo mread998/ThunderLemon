@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: wikijs-config
-  namespace: wikijs
-data:
-  WIKI_ADMIN_EMAIL: "marcread@gmail.com"
-  LOG_LEVEL: "info"
