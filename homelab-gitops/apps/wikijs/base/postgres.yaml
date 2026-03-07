@@ -1,64 +1,66 @@
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: wikijs-postgres
-  namespace: wikijs
-spec:
-  replicas: 1
-  selector:
-    matchLabels:
-      app: wikijs-postgres
-  template:
-    metadata:
-      labels:
-        app: wikijs-postgres
-    spec:
-      containers:
-        - name: postgres
-          image: postgres:15-alpine
-          imagePullPolicy: IfNotPresent
-          ports:
-            - containerPort: 5432
-          env:
-            - name: POSTGRES_USER
-              value: "wikijs"
-            - name: POSTGRES_DB
-              value: "wikijs"
-            - name: POSTGRES_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: wikijs-postgres-secret
-                  key: password
-          volumeMounts:
-            - name: postgres-data
-              mountPath: /var/lib/postgresql/data
-              subPath: postgres
-      volumes:
-        - name: postgres-data
-          persistentVolumeClaim:
-            claimName: wikijs-postgres-pvc
----
 apiVersion: v1
 kind: Service
 metadata:
-  name: wikijs-postgres
+  name: postgres
   namespace: wikijs
 spec:
-  selector:
-    app: wikijs-postgres
   ports:
     - name: postgres
       port: 5432
       targetPort: 5432
+  selector:
+    app: postgres
 ---
-apiVersion: v1
-kind: PersistentVolumeClaim
+apiVersion: apps/v1
+kind: StatefulSet
 metadata:
-  name: wikijs-postgres-pvc
+  name: postgres
   namespace: wikijs
 spec:
-  storageClassName: longhorn
-  accessModes: ["ReadWriteOnce"]
-  resources:
-    requests:
-      storage: 10Gi
+  serviceName: postgres
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        fsGroup: 999
+      containers:
+        - name: postgres
+          image: postgres:16
+          ports:
+            - containerPort: 5432
+              name: postgres
+          env:
+            - name: POSTGRES_DB
+              valueFrom: { secretKeyRef: { name: wikijs-secrets, key: POSTGRES_DB } }
+            - name: POSTGRES_USER
+              valueFrom: { secretKeyRef: { name: wikijs-secrets, key: POSTGRES_USER } }
+            - name: POSTGRES_PASSWORD
+              valueFrom: { secretKeyRef: { name: wikijs-secrets, key: POSTGRES_PASSWORD } }
+            - name: PGDATA
+              value: /var/lib/postgresql/data/pgdata
+          volumeMounts:
+            - name: pgdata
+              mountPath: /var/lib/postgresql/data            
+          readinessProbe:
+            tcpSocket: { port: 5432 }
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            tcpSocket: { port: 5432 }
+            initialDelaySeconds: 20
+            periodSeconds: 20
+  volumeClaimTemplates:
+    - metadata:
+        name: pgdata
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        storageClassName: longhorn
+        resources:
+          requests:
+            storage: 10Gi

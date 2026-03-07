@@ -4,10 +4,10 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - configmap.yaml
-  - sealedsecrets.yaml
+  - sealedsecret.yaml
   - postgres.yaml
   - pvc.yaml
-  - deployment.yaml
+  - wikijs.yaml
   - service.yaml
   - ingress.yaml
   - certificate-wikijs.yaml
