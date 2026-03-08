@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sabnzbd
+  namespace: sabnzbd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: sabnzbd
+  template:
+    metadata:
+      labels:
+        app: sabnzbd
+    spec:
+      containers:
+        - name: sabnzbd
+          image: ghcr.io/linuxserver/sabnzbd:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: sabnzbd-config
+            - secretRef:
+                name: sabnzbd-credentials
+          volumeMounts:
+            - name: sabnzbd-config
+              mountPath: /config
+            - name: sabnzbd-nfs
+              mountPath: /downloads
+              subPath: downloads
+            - name: sabnzbd-nfs
+              mountPath: /tv
+              subPath: tv
+            - name: sabnzbd-nfs
+              mountPath: /audio
+              subPath: audio
+            - name: sabnzbd-nfs
+              mountPath: /movies
+              subPath: movies
+      volumes:
+        - name: sabnzbd-config
+          persistentVolumeClaim:
+            claimName: sabnzbd-pvc
+        - name: sabnzbd-nfs
+          persistentVolumeClaim:
+            claimName: sabnzbd-nfs

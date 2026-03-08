@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: sabnzbd-config
+  namespace: sabnzbd
+data:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "UTC"
+  SABNZBD_WEB_PORT: "8080"
+  SABNZBD_HOST: "0.0.0.0"
+  # Set these values as desired for your environment:
+  # SABNZBD_USER: "admin"
+  # SABNZBD_PASS: "changeme"
+  # SABNZBD_APIKEY: ""
