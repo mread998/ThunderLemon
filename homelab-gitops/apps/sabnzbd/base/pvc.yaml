@@ -16,7 +16,7 @@ metadata:
   name: sabnzbd-nfs
   namespace: sabnzbd
 spec:
-  storageClassName: nfs-rxw
+  storageClassName: nfs-rwx
   accessModes: ["ReadWriteMany"]
   resources:
     requests:
