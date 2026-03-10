@@ -12,6 +12,7 @@
       - music
       - pv
       - downloads
+      - config
     samba_packages:
       - samba          # Common package name
       - samba-common   # Additional for some distros

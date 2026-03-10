@@ -12,6 +12,7 @@
       - pv
       - music
       - downloads
+      - config
     nfs_packages:
       - nfs-kernel-server    # Debian/Ubuntu
       # - nfs-utils            # RHEL/CentOS
