@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: media
 
-resources:
+bases:
   - ../../base
 
 patches:

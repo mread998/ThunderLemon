@@ -47,15 +47,3 @@ spec:
         - name: media-downloads
           persistentVolumeClaim:
             claimName: media-downloads
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: lidarr-config
-  namespace: media
-spec:
-  accessModes: ["ReadWriteMany"]
-  resources:
-    requests:
-      storage: 10Gi
-  volumeName: media-config-nfs-pv
