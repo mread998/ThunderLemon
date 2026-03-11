@@ -12,7 +12,7 @@ The media deployment includes:
 - **Bazarr** - Automatic subtitle management
 - **Prowlarr** - Centralized indexer management
 
-All applications share a common NFS-backed persistent volume for media storage.
+All applications share NFS-backed persistent volumes for both configuration and media storage.
 
 ## Architecture
 
@@ -21,33 +21,33 @@ All applications are deployed in the `media` namespace for isolation and organiz
 
 ### Storage
 
-#### Shared NFS Volume
+#### Dynamic NFS Provisioning via nfs-rwx StorageClass
+The cluster has the `nfs-rwx` StorageClass configured for automatic NFS volume provisioning:
 - **Server**: `10.11.11.46`
 - **Path**: `/srv/vault`
-- **Mount Points**:
-  - `/tv` - TV show storage
-  - `/movies` - Movie storage
-  - `/music` - Music storage
-  - `/downloads` - Download staging directory
-  - `/config` - Shared configuration directory
+- **Storage Class**: `nfs-rwx` (NFS CSI Driver)
+- **Access Mode**: ReadWriteMany (shared access)
+- **Volume Binding Mode**: Immediate
 
-#### Configuration Storage
-Each application has its own persistent volume claim backed by Longhorn storage:
-- `sonarr-config` - 10Gi
-- `radarr-config` - 10Gi
-- `lidarr-config` - 10Gi
+#### Application Configuration
+Each application has its own NFS-backed PVC for configuration:
+- `sonarr-config` - 10Gi mounted at `/config`
+- `radarr-config` - 10Gi mounted at `/config`
+- `lidarr-config` - 10Gi mounted at `/config`
+- `bazarr-config` - 5Gi mounted at `/config`
+- `prowlarr-config` - 5Gi mounted at `/config`
+
+#### Media Storage
+Shared across all *arr applications via NFS PVCs:
+- `media-downloads` - 500Gi mounted at `/downloads` (staging area)
+- `media-tv` - 1000Gi mounted at `/tv` (TV show storage)
+- `media-movies` - 1000Gi mounted at `/movies` (movie storage)
+- `media-music` - 500Gi mounted at `/music` (music storage)
 
 ### Services
 
 Each application exposes a ClusterIP service:
-- `sonarr:80` → container port `8989`
-- `radarr:80` → container port `7878`
-### Services
-
-Each application exposes a ClusterIP service:
-- `sonarr:80` → container port `8989`
-- `radarr:80` → container port `7878`
-- `lidarr:80` → container port `8686`
+- `sonarr:80` → container port `8989` (TV management)
 - `bazarr:80` → container port `6767`
 - `prowlarr:80` → container port `9696`
 
