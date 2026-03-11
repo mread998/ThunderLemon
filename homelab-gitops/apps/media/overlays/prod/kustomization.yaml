@@ -4,11 +4,26 @@ kind: Kustomization
 namespace: media
 
 bases:
-  - ../base
+  - ../../base
 
-patchesStrategicMerge:
-  - sonarr-replicas.yaml
-  - radarr-replicas.yaml
-  - lidarr-replicas.yaml
-  - bazarr-replicas.yaml
-  - prowlarr-replicas.yaml
+patches:
+  - path: sonarr-replicas.yaml
+    target:
+      kind: Deployment
+      name: sonarr
+  - path: radarr-replicas.yaml
+    target:
+      kind: Deployment
+      name: radarr
+  - path: lidarr-replicas.yaml
+    target:
+      kind: Deployment
+      name: lidarr
+  - path: bazarr-replicas.yaml
+    target:
+      kind: Deployment
+      name: bazarr
+  - path: prowlarr-replicas.yaml
+    target:
+      kind: Deployment
+      name: prowlarr
