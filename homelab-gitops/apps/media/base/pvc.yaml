@@ -130,3 +130,33 @@ spec:
   resources:
     requests:
       storage: 500Gi
+
+# Configuration - SABnzbd
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sabnzbd-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-rwx
+  resources:
+    requests:
+      storage: 10Gi
+
+# Configuration - Plex
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-rwx
+  resources:
+    requests:
+      storage: 20Gi

@@ -27,3 +27,11 @@ patches:
     target:
       kind: Deployment
       name: prowlarr
+  - path: plex-replicas.yaml
+    target:
+      kind: Deployment
+      name: plex
+  - path: sabnzbd-replicas.yaml
+    target:
+      kind: Deployment
+      name: sabnzbd

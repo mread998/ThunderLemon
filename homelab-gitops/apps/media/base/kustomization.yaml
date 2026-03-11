@@ -26,6 +26,17 @@ resources:
   - prowlarr-deployment.yaml
   - prowlarr-service.yaml
   - prowlarr-ingress.yaml
+  - plex-configmap.yaml
+  - plex-deployment.yaml
+  - plex-service.yaml
+  - plex-certificate.yaml
+  - plex-ingress.yaml
+  - sabnzbd-configmap.yaml
+  - sabnzbd-sealedsecrets.yaml
+  - sabnzbd-deployment.yaml
+  - sabnzbd-service.yaml
+  - sabnzbd-certificate.yaml
+  - sabnzbd-ingress.yaml
 
 commonLabels:
   app.kubernetes.io/name: media

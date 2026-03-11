@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: sabnzbd
-  namespace: sabnzbd
+  namespace: media
 spec:
   replicas: 1
   selector:
@@ -25,25 +25,37 @@ spec:
                 name: sabnzbd-config
             - secretRef:
                 name: sabnzbd-credentials
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
           volumeMounts:
             - name: sabnzbd-config
               mountPath: /config
-            - name: sabnzbd-nfs
+            - name: media-downloads
               mountPath: /downloads
-              subPath: downloads
-            - name: sabnzbd-nfs
+            - name: media-tv
               mountPath: /tv
-              subPath: tv
-            - name: sabnzbd-nfs
-              mountPath: /audio
-              subPath: audio
-            - name: sabnzbd-nfs
+            - name: media-movies
               mountPath: /movies
-              subPath: movies
+            - name: media-music
+              mountPath: /audio
       volumes:
         - name: sabnzbd-config
           persistentVolumeClaim:
-            claimName: sabnzbd-pvc
-        - name: sabnzbd-nfs
+            claimName: sabnzbd-config
+        - name: media-downloads
           persistentVolumeClaim:
-            claimName: sabnzbd-nfs
+            claimName: media-downloads
+        - name: media-tv
+          persistentVolumeClaim:
+            claimName: media-tv
+        - name: media-movies
+          persistentVolumeClaim:
+            claimName: media-movies
+        - name: media-music
+          persistentVolumeClaim:
+            claimName: media-music
