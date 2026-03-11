@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: lidarr
+  namespace: media
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - lidarr.thundertest.org
+      secretName: mealie-tls
+  rules:
+    - host: lidarr.thundertest.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: lidarr
+                port:
+                  number: 80
