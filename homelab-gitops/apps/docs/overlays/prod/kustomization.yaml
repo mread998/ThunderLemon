@@ -1,0 +1,17 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: docs
+
+bases:
+  - ../../base
+
+patches:
+  - path: wikijs-replicas.yaml
+    target:
+      kind: Deployment
+      name: wikijs
+  - path: paperless-replicas.yaml
+    target:
+      kind: Deployment
+      name: paperless

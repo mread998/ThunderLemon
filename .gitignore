@@ -1,0 +1,2 @@
+# Plaintext secret files - fill in values, seal with kubeseal, then delete
+*-plaintext.yaml

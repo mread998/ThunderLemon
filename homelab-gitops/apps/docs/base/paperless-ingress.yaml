@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: paperless
+  namespace: docs
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - paperless.thundertest.org
+      secretName: paperless-tls
+  rules:
+    - host: paperless.thundertest.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: paperless
+                port:
+                  number: 80
