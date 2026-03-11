@@ -1,0 +1,27 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: media
+
+resources:
+  - namespace.yaml
+  - pvc.yaml
+  - sonarr-configmap.yaml
+  - sonarr-deployment.yaml
+  - sonarr-service.yaml
+  - radarr-configmap.yaml
+  - radarr-deployment.yaml
+  - radarr-service.yaml
+  - lidarr-configmap.yaml
+  - lidarr-deployment.yaml
+  - lidarr-service.yaml
+  - bazarr-configmap.yaml
+  - bazarr-deployment.yaml
+  - bazarr-service.yaml
+  - prowlarr-configmap.yaml
+  - prowlarr-deployment.yaml
+  - prowlarr-service.yaml
+
+commonLabels:
+  app.kubernetes.io/name: media
+  app.kubernetes.io/component: arr-apps
