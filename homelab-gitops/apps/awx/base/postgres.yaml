@@ -68,6 +68,8 @@ spec:
             timeoutSeconds: 5
             failureThreshold: 6    
   volumeClaimTemplates:
+    - apiVersion: v1	
+      kind: PersistentVolumeClaim	
     - metadata:
         name: pgdata
       spec:
