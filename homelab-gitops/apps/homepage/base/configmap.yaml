@@ -33,34 +33,32 @@ data:
             href: https://10.11.11.48:8006
             description: Proxmox VE for virtualization
         - HomeGuard:
-            href: https://homeguard.thundertest.org
+            href: https://10.11.11.25
             description: HomeGuard for home automation
 
-    - My Second Group:
-        - My Second Service:
-            href: http://localhost/
-            description: Homepage is the best
+    - Media Services:
+        - Plex: 
+            href: http://plex.tv/
+        - Jellyfin:
+            href: http://jellyfin.thundertest.org/
+        - Sonarr:
+            href: http://sonarr.thundertest.org/
+        - Radarr:
+            href: http://radarr.thundertest.org/
+        - Lidarr:
+            href: http://lidarr.thundertest.org/
+        - Bazarr:
+            href: http://bazarr.thundertest.org/
+        - Stashapp:
+            href: http://stashapp.thundertest.org/
+        - Whisparr:
+            href: http://whisparr.thundertest.org/
+            
 
     - My Third Group:
         - My Third Service:
             href: http://localhost/
-            description: Homepage is 😎
-    # - Infrastructure:
-    #     - ArgoCD:
-    #         href: https://argocd.thundertest.org
-    #         description: GitOps controller
-    #     - Longhorn:
-    #         href: https://longhorn.thundertest.org
-    #         description: Longhorn for storage management
-    #     - AWX:
-    #         href: https://awx.thundertest.org
-    #         description: Ansible AWX for automation
-    #     - Proxmox:
-    #         href: https://10.11.11.48:8006
-    #         description: Proxmox VE for virtualization
-    #     - HomeGuard:
-    #         href: https://homeguard.thundertest.org
-    #         description: HomeGuard for home automation
+            description: Homepage is 
   widgets.yaml: |
     - resources:
         cpu: true
