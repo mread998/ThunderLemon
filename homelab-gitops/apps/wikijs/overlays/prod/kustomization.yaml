@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: wikijs
 
-bases:
+resources:
   - ../../base
 
 patches:
