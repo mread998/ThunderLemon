@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - postgres.yaml
+  - postgres-service.yaml
   - awx.yaml
   - ingress.yaml
   - awx-admin-sealedsecrets.yaml
