@@ -14,5 +14,3 @@ resources:
   - certificate.yaml
   - ingress.yaml
 
-commonLabels:
-  app.kubernetes.io/name: wikijs
