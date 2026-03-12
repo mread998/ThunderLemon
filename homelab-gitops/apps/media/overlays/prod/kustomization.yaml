@@ -35,3 +35,7 @@ patches:
     target:
       kind: Deployment
       name: sabnzbd
+  - path: jellyfin-replicas.yaml
+    target:
+      kind: Deployment
+      name: jellyfin

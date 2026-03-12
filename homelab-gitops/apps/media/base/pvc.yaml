@@ -146,6 +146,21 @@ spec:
     requests:
       storage: 10Gi
 
+# Configuration - Jellyfin
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-rwx
+  resources:
+    requests:
+      storage: 20Gi
+
 # Configuration - Plex
 ---
 apiVersion: v1

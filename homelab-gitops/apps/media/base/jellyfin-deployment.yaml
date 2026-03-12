@@ -1,0 +1,54 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: jellyfin
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: jellyfin
+  template:
+    metadata:
+      labels:
+        app: jellyfin
+    spec:
+      containers:
+        - name: jellyfin
+          image: ghcr.io/linuxserver/jellyfin:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8096
+              name: http
+          envFrom:
+            - configMapRef:
+                name: jellyfin-config
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "500m"
+            limits:
+              memory: "4Gi"
+              cpu: "4000m"
+          volumeMounts:
+            - name: jellyfin-config
+              mountPath: /config
+            - name: media-tv
+              mountPath: /tv
+            - name: media-movies
+              mountPath: /movies
+            - name: media-music
+              mountPath: /music
+      volumes:
+        - name: jellyfin-config
+          persistentVolumeClaim:
+            claimName: jellyfin-config
+        - name: media-tv
+          persistentVolumeClaim:
+            claimName: media-tv
+        - name: media-movies
+          persistentVolumeClaim:
+            claimName: media-movies
+        - name: media-music
+          persistentVolumeClaim:
+            claimName: media-music
