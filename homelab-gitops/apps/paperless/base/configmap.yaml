@@ -2,7 +2,7 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: paperless-config
-  namespace: docs
+  namespace: paperless
 data:
   PAPERLESS_REDIS: "redis://paperless-redis:6379"
   PAPERLESS_DBHOST: "paperless-postgres"

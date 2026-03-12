@@ -2,7 +2,7 @@ apiVersion: v1
 kind: Service
 metadata:
   name: wikijs-postgres
-  namespace: docs
+  namespace: wikijs
 spec:
   ports:
     - name: postgres
@@ -15,7 +15,7 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: wikijs-postgres
-  namespace: docs
+  namespace: wikijs
 spec:
   serviceName: wikijs-postgres
   replicas: 1
