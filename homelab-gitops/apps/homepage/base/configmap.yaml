@@ -19,10 +19,22 @@ data:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - My First Group:
-        - My First Service:
-            href: http://localhost/
-            description: Homepage is awesome
+    - Infrastructure:
+        - ArgoCD:
+            href: https://argocd.thundertest.org
+            description: GitOps controller
+        - Longhorn:
+            href: https://longhorn.thundertest.org
+            description: Longhorn for storage management
+        - AWX:
+            href: https://awx.thundertest.org
+            description: Ansible AWX for automation
+        - Proxmox:
+            href: https://10.11.11.48:8006
+            description: Proxmox VE for virtualization
+        - HomeGuard:
+            href: https://homeguard.thundertest.org
+            description: HomeGuard for home automation
 
     - My Second Group:
         - My Second Service:
