@@ -38,7 +38,7 @@ data:
 
     - Media Services:
         - Plex: 
-            href: http://plex.tv/
+            href: https://app.plex.tv/desktop/#!/
         - Jellyfin:
             href: http://jellyfin.thundertest.org/
         - Sonarr:
@@ -53,7 +53,7 @@ data:
             href: http://stashapp.thundertest.org/
         - Whisparr:
             href: http://whisparr.thundertest.org/
-            
+
 
     - My Third Group:
         - My Third Service:
