@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteMany
-  storageClassName: nfs-rwx
+  storageClassName: longhorn
   resources:
     requests:
       storage: 10Gi
