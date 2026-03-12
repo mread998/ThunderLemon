@@ -35,3 +35,6 @@ data:
         cpu: true
         memory: true
         disk: /
+  kubernetes.yaml: |
+    - cluster:
+        name: "Home Cluster
