@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dirt
+
+resources:
+  - namespace.yaml
+  - pvc.yaml
+  - stash-configmap.yaml
+  - stash-deployment.yaml
+  - stash-service.yaml
+  - stash-certificate.yaml
+  - stash-ingress.yaml
+  - whisparr-configmap.yaml
+  - whisparr-deployment.yaml
+  - whisparr-service.yaml
+  - whisparr-certificate.yaml
+  - whisparr-ingress.yaml
+
+commonLabels:
+  app.kubernetes.io/name: dirt
+  app.kubernetes.io/component: arr-apps

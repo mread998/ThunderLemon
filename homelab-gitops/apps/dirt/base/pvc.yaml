@@ -1,0 +1,59 @@
+# Configuration - Stash
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: stash-config
+  namespace: dirt
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-rwx
+  resources:
+    requests:
+      storage: 50Gi
+
+# Configuration - Whisparr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whisparr-config
+  namespace: dirt
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-rwx
+  resources:
+    requests:
+      storage: 5Gi
+
+# Adult Content NFS Storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dirt-content
+  namespace: dirt
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-rwx
+  resources:
+    requests:
+      storage: 1000Gi
+
+# Downloads NFS Storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dirt-downloads
+  namespace: dirt
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-rwx
+  resources:
+    requests:
+      storage: 500Gi

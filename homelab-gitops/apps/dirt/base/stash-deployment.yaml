@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: stash
+  namespace: dirt
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: stash
+  template:
+    metadata:
+      labels:
+        app: stash
+    spec:
+      containers:
+        - name: stash
+          image: stashapp/stash:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 9999
+              name: http
+          envFrom:
+            - configMapRef:
+                name: stash-config
+          resources:
+            requests:
+              memory: "512Mi"
+              cpu: "250m"
+            limits:
+              memory: "4Gi"
+              cpu: "2000m"
+          volumeMounts:
+            - name: stash-config
+              mountPath: /root/.stash
+            - name: dirt-content
+              mountPath: /data
+            - name: dirt-downloads
+              mountPath: /downloads
+      volumes:
+        - name: stash-config
+          persistentVolumeClaim:
+            claimName: stash-config
+        - name: dirt-content
+          persistentVolumeClaim:
+            claimName: dirt-content
+        - name: dirt-downloads
+          persistentVolumeClaim:
+            claimName: dirt-downloads

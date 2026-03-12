@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: whisparr-tls
+  namespace: dirt
+spec:
+  secretName: whisparr-tls
+  issuerRef:
+    name: selfsigned
+    kind: ClusterIssuer
+  dnsNames:
+    - whisparr.thundertest.org
