@@ -18,12 +18,18 @@ data:
         - ArgoCD:
             href: https://argocd.thundertest.org
             description: GitOps controller
-        - AWX:
-            href: https://awx.thundertest.org
-            description: Ansible AWX for automation
         - Longhorn:
             href: https://longhorn.thundertest.org
             description: Longhorn for storage management
+        - AWX:
+            href: https://awx.thundertest.org
+            description: Ansible AWX for automation
+        - Proxmox:
+            href: https://10.11.11.48:8006
+            description: Proxmox VE for virtualization
+        - HomeGuard:
+            href: https://homeguard.thundertest.org
+            description: HomeGuard for home automation
   widgets.yaml: |
     - resources:
         cpu: true
