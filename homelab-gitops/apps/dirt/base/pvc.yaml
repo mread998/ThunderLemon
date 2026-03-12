@@ -22,8 +22,8 @@ metadata:
   namespace: dirt
 spec:
   accessModes:
-    - ReadWriteMany
-  storageClassName: nfs-rwx
+    - ReadWriteOnce
+  storageClassName: longhorn
   resources:
     requests:
       storage: 5Gi
