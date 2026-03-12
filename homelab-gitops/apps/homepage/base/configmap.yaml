@@ -4,37 +4,53 @@ metadata:
   name: homepage-config
   namespace: homepage
 data:
+  kubernetes.yaml: |
+    mode: cluster
   settings.yaml: |
     title: "Homelab"
     theme: dark
     headerStyle: clean
+  custom.css: ""
+  custom.js: ""
   bookmarks.yaml: |
     - Dev:
         - GitHub:
             - abbr: GH
               href: https://github.com/
   services.yaml: |
-    - Infrastructure:
-        - ArgoCD:
-            href: https://argocd.thundertest.org
-            description: GitOps controller
-        - Longhorn:
-            href: https://longhorn.thundertest.org
-            description: Longhorn for storage management
-        - AWX:
-            href: https://awx.thundertest.org
-            description: Ansible AWX for automation
-        - Proxmox:
-            href: https://10.11.11.48:8006
-            description: Proxmox VE for virtualization
-        - HomeGuard:
-            href: https://homeguard.thundertest.org
-            description: HomeGuard for home automation
+    - My First Group:
+        - My First Service:
+            href: http://localhost/
+            description: Homepage is awesome
+
+    - My Second Group:
+        - My Second Service:
+            href: http://localhost/
+            description: Homepage is the best
+
+    - My Third Group:
+        - My Third Service:
+            href: http://localhost/
+            description: Homepage is 😎
+    # - Infrastructure:
+    #     - ArgoCD:
+    #         href: https://argocd.thundertest.org
+    #         description: GitOps controller
+    #     - Longhorn:
+    #         href: https://longhorn.thundertest.org
+    #         description: Longhorn for storage management
+    #     - AWX:
+    #         href: https://awx.thundertest.org
+    #         description: Ansible AWX for automation
+    #     - Proxmox:
+    #         href: https://10.11.11.48:8006
+    #         description: Proxmox VE for virtualization
+    #     - HomeGuard:
+    #         href: https://homeguard.thundertest.org
+    #         description: HomeGuard for home automation
   widgets.yaml: |
     - resources:
         cpu: true
         memory: true
         disk: /
-  kubernetes.yaml: |
-    - cluster:
-        name: "Home Cluster
+  docker.yaml: ""
