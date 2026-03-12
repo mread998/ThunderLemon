@@ -3,7 +3,7 @@ kind: Kustomization
 
 namespace: docs
 
-bases:
+resources:
   - ../../base
 
 patches:
