@@ -22,3 +22,17 @@ patches:
     target:
       kind: Certificate
       name: mealie-tls
+  - patch: |
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: mealie-pvc
+        annotations:
+          volume.longhorn.io/number-of-replicas: "1"
+      spec:
+        resources:
+          requests:
+            storage: 2Gi
+    target:
+      kind: PersistentVolumeClaim
+      name: mealie-pvc
