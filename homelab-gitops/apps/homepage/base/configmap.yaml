@@ -23,23 +23,23 @@ data:
         - TrueNas:
             description: Open source enterprise ready NAS based operating system
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/truenas-scale.png
-            href: https://192.168.1.10:8443/ui/dashboard
-        - Cisco Switch:
-            description: Cisco Switch
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cisco.png
-            href: http://10.11.11.221
+            href: https://10.11.11.10:8443/ui/dashboard
+        # - Cisco Switch:
+        #     description: Cisco Switch
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cisco.png
+        #     href: http://10.11.11.221
         - Netgear:
             description: Netgear router
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netgear.png
-            href: https://192.168.1.1
-        - WIFI Ext:
-            description: tp-link wifi extender
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tp-link.png
-            href: https://192.168.1.123
-        - SecRoute:
-            description: VPN based router chopper
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openwrt.png
-            href: https://192.168.8.1
+            href: https://10.11.10.1
+        # - WIFI Ext:
+        #     description: tp-link wifi extender
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tp-link.png
+        #     href: https://10.11.10.123
+        # - SecRoute:
+        #     description: VPN based router chopper
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openwrt.png
+        #     href: https://10.11.8.1
         - Proxmox:
             icon: proxmox.png
             href: https://10.11.11.48:8006
@@ -48,6 +48,7 @@ data:
             icon: adguard-home.png
             href: https://10.11.11.25
             description: HomeGuard for home automation
+    - Development and Automation
         - ArgoCD:
             icon: argo-cd.png
             href: https://argocd.thundertest.org
@@ -72,13 +73,13 @@ data:
             icon: jellyfin.png
             href: http://jellyfin.thundertest.org/
             description: Jellyfin for media streaming
-        - Navidrome:
-            icon: navidrome.png
-            href: http://navidrome.thundertest.org/
-            description: Navidrome for music streaming
+        # - Navidrome:
+        #     icon: navidrome.png
+        #     href: http://navidrome.thundertest.org/
+        #     description: Navidrome for music streaming
         - Stashapp:
-            icon: stashapp.png
-            href: http://stashapp.thundertest.org/
+            icon: stash.png
+            href: http://stash.thundertest.org/
             description: Stashapp for adult content management    
         #
         # There might be plans to add these in the future, but for now they are not included in the dashboard       
@@ -121,6 +122,10 @@ data:
             icon: bazarr.png
             href: http://bazarr.thundertest.org/
             description: Bazarr for subtitle management
+        - sabnzbd:
+            icon: sabnzbd.png
+            href: http://sabnzbd.thundertest.org/
+            description: Sabnzbd for usenet downloading
         #
         # There might be plans to add these in the future, but for now they are not included in the dashboard
         #    
@@ -140,14 +145,10 @@ data:
         #     description: stuff
         #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kapowarr.png
         #     href: https://kapowarr.thundertest.org
-        # - Bazarr:
-        #     description: Stuff
-        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/bazarr.png
-        #     href: https://bazarr.thundertest.org/
-        # - Tautulli:
-        #     description: Stuff
-        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tautulli.png
-        #     href: https://tautulli.thundertest.org/
+        - Tautulli:
+            description: Stuff
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tautulli.png
+            href: https://tautulli.thundertest.org/
         - Whisparr:
             icon: whisparr.png
             href: http://whisparr.thundertest.org/
@@ -163,7 +164,7 @@ data:
             # description: system monitoring
             # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
             # href: https://192.168.1.10:30037/
-         - mealie:
+        - mealie:
             description: recipies
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mealie.png
             href: https://mealie.thundertest.org
