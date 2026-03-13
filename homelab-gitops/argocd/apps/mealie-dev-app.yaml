@@ -1,20 +1,19 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: mealie
+  name: mealie-dev
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/mread998/ThunderLemon.git
-    targetRevision: main
-    path: homelab-gitops/apps/mealie/overlays/prod
+    targetRevision: Development
+    path: homelab-gitops/apps/mealie/overlays/dev
   destination:
     server: https://kubernetes.default.svc
-    namespace: mealie
+    namespace: mealie-dev
   syncPolicy:
     automated:
-      enabled: false      
       prune: true
       selfHeal: true
     syncOptions:
