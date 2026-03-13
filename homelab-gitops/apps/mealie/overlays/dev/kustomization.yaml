@@ -7,5 +7,18 @@ resources:
   - ../../base
 
 patches:
+  # Remove the base Namespace (mealie) so it doesn't conflict with the prod app
+  - patch: |
+      $patch: delete
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: mealie
   - path: ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: mealie
   - path: certificate-patch.yaml
+    target:
+      kind: Certificate
+      name: mealie-tls
