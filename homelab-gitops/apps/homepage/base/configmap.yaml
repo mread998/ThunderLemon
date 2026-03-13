@@ -154,10 +154,36 @@ data:
             description: Whisparr for video short management
 
 
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 
+    - Misc Services:
+        # - code-servers:
+            # description: web based vs code
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/code-server.png
+            # href: https://code.thundertest.org/login
+        # - Grafana:
+            # description: system monitoring
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
+            # href: https://192.168.1.10:30037/
+         - mealie:
+            description: recipies
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mealie.png
+            href: https://mealie.thundertest.org
+        # - metube:
+            # description: youtube grabber
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/metube.png
+            # href: https://tube.thundertest.org
+        # - Nginx Proxy:
+            # description: Nginx Proxy
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/nginx-proxy-manager.png
+            # href: https://proxy.thundertest.org
+        # - Wiki JS:
+            # description: Wiki
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/wikijs.png
+            # href: https://wiki.thundertest.org
+        # - Calibre:
+            # description:
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre.png
+            # href: https://calibre.thundertest.org
+
   widgets.yaml: |
     - resources:
         cpu: true
