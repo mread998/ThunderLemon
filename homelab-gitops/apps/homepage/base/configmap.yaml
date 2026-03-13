@@ -21,7 +21,7 @@ data:
   services.yaml: |
     - Infrastructure:
         - ArgoCD:
-            icon: arogo-cd.png
+            icon: argo-cd.svg
             href: https://argocd.thundertest.org
             description: GitOps controller
         - Longhorn:
@@ -37,7 +37,7 @@ data:
             href: https://10.11.11.48:8006
             description: Proxmox VE for virtualization
         - HomeGuard:
-            icon: homeguard.png
+            icon: adguard-home.svg
             href: https://10.11.11.25
             description: HomeGuard for home automation
 
