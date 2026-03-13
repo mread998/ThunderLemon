@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: homepage-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mread998/ThunderLemon.git
+    targetRevision: main
+    path: homelab-gitops/apps/homepage/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: homepage-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

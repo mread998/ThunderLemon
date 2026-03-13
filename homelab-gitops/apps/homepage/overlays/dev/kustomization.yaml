@@ -1,0 +1,41 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: homepage-dev
+
+resources:
+  - ../../base
+
+patches:
+  # Remove the base Namespace (homepage) so it doesn't conflict with the prod app
+  - patch: |
+      $patch: delete
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: homepage
+  - path: ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: homepage
+  - path: certificate-patch.yaml
+    target:
+      kind: Certificate
+      name: homepage-tls
+  # Patch HOMEPAGE_ALLOWED_HOSTS for dev hostname
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: homepage
+      spec:
+        template:
+          spec:
+            containers:
+              - name: homepage
+                env:
+                  - name: HOMEPAGE_ALLOWED_HOSTS
+                    value: "homepage-dev.thundertest.com"
+    target:
+      kind: Deployment
+      name: homepage
