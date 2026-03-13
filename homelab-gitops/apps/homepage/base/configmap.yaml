@@ -48,7 +48,7 @@ data:
             icon: adguard-home.png
             href: https://10.11.11.25
             description: HomeGuard for home automation
-    - Development and Automation
+    - Development and Automation:
         - ArgoCD:
             icon: argo-cd.png
             href: https://argocd.thundertest.org
