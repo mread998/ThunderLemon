@@ -24,10 +24,10 @@ data:
             description: Open source enterprise ready NAS based operating system
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/truenas-scale.png
             href: https://10.11.11.10:8443/ui/dashboard
-        # - Cisco Switch:
-        #     description: Cisco Switch
-        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cisco.png
-        #     href: http://10.11.11.221
+        - Cisco Switch:
+            description: Cisco Switch
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cisco.png
+            href: http://10.11.11.221
         - Netgear:
             description: Netgear router
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netgear.png
