@@ -21,11 +21,9 @@ data:
   services.yaml: |
     - Infrastructure:
         - ArgoCD:
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/argo-cd.svg
             href: https://argocd.thundertest.org
             description: GitOps controller
         - Longhorn:
-            icon: longhorn.svg
             href: https://longhorn.thundertest.org
             description: Longhorn for storage management
         - AWX:
