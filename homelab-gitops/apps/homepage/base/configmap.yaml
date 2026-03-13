@@ -20,45 +20,171 @@ data:
               href: https://github.com/
   services.yaml: |
     - Infrastructure:
-        - ArgoCD:
-            href: https://argocd.thundertest.org
-            description: GitOps controller
-        - Longhorn:
-            href: https://longhorn.thundertest.org
-            description: Longhorn for storage management
-        - AWX:
-            href: https://awx.thundertest.org
-            description: Ansible AWX for automation
+        - TrueNas:
+            description: Open source enterprise ready NAS based operating system
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/truenas-scale.png
+            href: https://10.11.11.10:8443/ui/dashboard
+        # - Cisco Switch:
+        #     description: Cisco Switch
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/cisco.png
+        #     href: http://10.11.11.221
+        - Netgear:
+            description: Netgear router
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/netgear.png
+            href: https://10.11.10.1
+        # - WIFI Ext:
+        #     description: tp-link wifi extender
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tp-link.png
+        #     href: https://10.11.10.123
+        # - SecRoute:
+        #     description: VPN based router chopper
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openwrt.png
+        #     href: https://10.11.8.1
         - Proxmox:
+            icon: proxmox.png
             href: https://10.11.11.48:8006
             description: Proxmox VE for virtualization
         - HomeGuard:
+            icon: adguard-home.png
             href: https://10.11.11.25
             description: HomeGuard for home automation
+    - Development and Automation:
+        - ArgoCD:
+            icon: argo-cd.png
+            href: https://argocd.thundertest.org
+            description: GitOps controller
+        - Longhorn:
+            icon: longhorn.png
+            href: https://longhorn.thundertest.org
+            description: Longhorn for storage management
+        - AWX:
+            icon: awx.png
+            href: https://awx.thundertest.org
+            description: Ansible AWX for automation
+
 
     - Media Services:
         - Plex: 
+            icon: plex.png
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/plex.png
             href: https://app.plex.tv/desktop/#!/
+            description: Plex for media streaming
         - Jellyfin:
+            icon: jellyfin.png
             href: http://jellyfin.thundertest.org/
-        - Sonarr:
-            href: http://sonarr.thundertest.org/
-        - Radarr:
-            href: http://radarr.thundertest.org/
-        - Lidarr:
-            href: http://lidarr.thundertest.org/
-        - Bazarr:
-            href: http://bazarr.thundertest.org/
+            description: Jellyfin for media streaming
+        # - Navidrome:
+        #     icon: navidrome.png
+        #     href: http://navidrome.thundertest.org/
+        #     description: Navidrome for music streaming
         - Stashapp:
-            href: http://stashapp.thundertest.org/
+            icon: stash.png
+            href: http://stash.thundertest.org/
+            description: Stashapp for adult content management    
+        #
+        # There might be plans to add these in the future, but for now they are not included in the dashboard       
+        # - AudioBookShelf:
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/audiobookshelf.png
+        #     href: https://audiobooks.thundertest.org
+        #     description:
+        # - Paperless:
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/paperless-ngx.png
+        #     href: http://192.168.1.10:30070/
+        #     description:
+        # - Komga:
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/komga.png
+        #     href: https://komga.thundertest.org
+        #     description:
+        # - Kavita:
+        #     description:
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kavita.png
+        #     href: https://kavita.thundertest.org
+        # - Calibre-Web:
+        #     description:
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre-web.png
+        #     href: https://calibre-web.thundertest.org
+
+
+    - Content Management:
+        - Sonarr:
+            icon: sonarr.png
+            href: http://sonarr.thundertest.org/
+            description: Sonarr for TV show management
+        - Radarr:
+            icon: radarr.png
+            href: http://radarr.thundertest.org/
+            description: Radarr for movie management
+        - Lidarr:
+            icon: lidarr.png
+            href: http://lidarr.thundertest.org/
+            description: Lidarr for music management
+        - Bazarr:
+            icon: bazarr.png
+            href: http://bazarr.thundertest.org/
+            description: Bazarr for subtitle management
+        - sabnzbd:
+            icon: sabnzbd.png
+            href: http://sabnzbd.thundertest.org/
+            description: Sabnzbd for usenet downloading
+        #
+        # There might be plans to add these in the future, but for now they are not included in the dashboard
+        #    
+        # - Readarr:
+        #     description: stuff
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/readarr.png
+        #     href: https://readarr.thundertest.org
+        # - Prowarr:
+        #     description: stuff
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/prowlarr.png
+        #     href: https://prowlarr.thundertest.org
+        # - Overseerr:
+        #     description: stuff
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/overseerr.png
+        #     href: https://overseerr.thundertest.org
+        # - Kapowarr:
+        #     description: stuff
+        #     icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/kapowarr.png
+        #     href: https://kapowarr.thundertest.org
+        - Tautulli:
+            description: Stuff
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/tautulli.png
+            href: https://tautulli.thundertest.org/
         - Whisparr:
+            icon: whisparr.png
             href: http://whisparr.thundertest.org/
+            description: Whisparr for video short management
 
 
-    - My Third Group:
-        - My Third Service:
-            href: http://localhost/
-            description: Homepage is 
+    - Misc Services:
+        # - code-servers:
+            # description: web based vs code
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/code-server.png
+            # href: https://code.thundertest.org/login
+        # - Grafana:
+            # description: system monitoring
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/grafana.png
+            # href: https://192.168.1.10:30037/
+        - mealie:
+            description: recipies
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mealie.png
+            href: https://mealie.thundertest.org
+        # - metube:
+            # description: youtube grabber
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/metube.png
+            # href: https://tube.thundertest.org
+        # - Nginx Proxy:
+            # description: Nginx Proxy
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/nginx-proxy-manager.png
+            # href: https://proxy.thundertest.org
+        # - Wiki JS:
+            # description: Wiki
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/wikijs.png
+            # href: https://wiki.thundertest.org
+        # - Calibre:
+            # description:
+            # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre.png
+            # href: https://calibre.thundertest.org
+
   widgets.yaml: |
     - resources:
         cpu: true
