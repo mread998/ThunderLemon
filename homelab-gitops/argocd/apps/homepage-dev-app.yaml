@@ -7,7 +7,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/mread998/ThunderLemon.git
-    targetRevision: main
+    targetRevision: dev
     path: homelab-gitops/apps/homepage/overlays/dev
   destination:
     server: https://kubernetes.default.svc
