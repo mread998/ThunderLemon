@@ -21,18 +21,23 @@ data:
   services.yaml: |
     - Infrastructure:
         - ArgoCD:
+            icon: arogo-cd.png
             href: https://argocd.thundertest.org
             description: GitOps controller
         - Longhorn:
+            icon: longhorn.png
             href: https://longhorn.thundertest.org
             description: Longhorn for storage management
         - AWX:
+            icon: awx.png
             href: https://awx.thundertest.org
             description: Ansible AWX for automation
         - Proxmox:
+            icon: proxmox.png
             href: https://10.11.11.48:8006
             description: Proxmox VE for virtualization
         - HomeGuard:
+            icon: homeguard.png
             href: https://10.11.11.25
             description: HomeGuard for home automation
 
