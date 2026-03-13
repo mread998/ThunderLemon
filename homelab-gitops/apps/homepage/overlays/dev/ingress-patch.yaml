@@ -7,10 +7,10 @@ metadata:
 spec:
   tls:
     - hosts:
-        - homepage-dev.thundertest.com
+        - homepage-dev.thundertest.org
       secretName: homepage-dev-tls
   rules:
-    - host: homepage-dev.thundertest.com
+    - host: homepage-dev.thundertest.org
       http:
         paths:
           - path: /
