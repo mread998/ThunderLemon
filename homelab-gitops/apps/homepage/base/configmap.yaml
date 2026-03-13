@@ -21,6 +21,7 @@ data:
   services.yaml: |
     - Infrastructure:
         - ArgoCD:
+            icon: https://github.com/homarr-labs/dashboard-icons/blob/main/svg/argo-cd.svg
             href: https://argocd.thundertest.org
             description: GitOps controller
         - Longhorn:
@@ -39,20 +40,28 @@ data:
     - Media Services:
         - Plex: 
             href: https://app.plex.tv/desktop/#!/
+            description: Plex for media streaming
         - Jellyfin:
             href: http://jellyfin.thundertest.org/
+            description: Jellyfin for media streaming
         - Sonarr:
             href: http://sonarr.thundertest.org/
+            description: Sonarr for TV show management
         - Radarr:
             href: http://radarr.thundertest.org/
+            description: Radarr for movie management
         - Lidarr:
             href: http://lidarr.thundertest.org/
+            description: Lidarr for music management
         - Bazarr:
             href: http://bazarr.thundertest.org/
+            description: Bazarr for subtitle management
         - Stashapp:
             href: http://stashapp.thundertest.org/
+            description: Stashapp for adult content management
         - Whisparr:
             href: http://whisparr.thundertest.org/
+
 
 
     - My Third Group:
