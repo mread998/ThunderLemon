@@ -1,0 +1,21 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: dirt-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mread998/ThunderLemon
+    targetRevision: Development
+    path: homelab-gitops/apps/dirt/overlays/dev
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: dirt-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

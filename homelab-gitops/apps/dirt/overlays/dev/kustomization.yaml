@@ -1,0 +1,81 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: dirt-dev
+
+resources:
+  - ../../base
+
+patches:
+  # Remove the base Namespace (dirt) so it doesn't conflict with prod
+  - patch: |
+      $patch: delete
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: dirt
+  - path: stash-ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: stash
+  - path: whisparr-ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: whisparr
+  - path: stash-certificate-patch.yaml
+    target:
+      kind: Certificate
+      name: stash-tls
+  - path: whisparr-certificate-patch.yaml
+    target:
+      kind: Certificate
+      name: whisparr-tls
+  # Reduce PVC sizes for dev
+  - patch: |
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: stash-config
+      spec:
+        resources:
+          requests:
+            storage: 2Gi
+    target:
+      kind: PersistentVolumeClaim
+      name: stash-config
+  - patch: |
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: whisparr-config
+      spec:
+        resources:
+          requests:
+            storage: 1Gi
+    target:
+      kind: PersistentVolumeClaim
+      name: whisparr-config
+  - patch: |
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: dirt-content
+      spec:
+        resources:
+          requests:
+            storage: 10Gi
+    target:
+      kind: PersistentVolumeClaim
+      name: dirt-content
+  - patch: |
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: dirt-downloads
+      spec:
+        resources:
+          requests:
+            storage: 10Gi
+    target:
+      kind: PersistentVolumeClaim
+      name: dirt-downloads

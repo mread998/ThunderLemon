@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: stash
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - stash-dev.thundertest.org
+      secretName: stash-dev-tls
+  rules:
+    - host: stash-dev.thundertest.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: stash
+                port:
+                  number: 80

@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: whisparr
+spec:
+  ingressClassName: nginx
+  tls:
+    - hosts:
+        - whisparr-dev.thundertest.org
+      secretName: whisparr-dev-tls
+  rules:
+    - host: whisparr-dev.thundertest.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: whisparr
+                port:
+                  number: 80
