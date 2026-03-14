@@ -13,6 +13,9 @@ spec:
     targetRevision: 3.2.0
     helm:
       values: |
+        watchNamespaces:
+          - awx
+          - awx-dev
         # Keep defaults for now
         # (We manage the AWX instance separately in the next app)
   destination:
