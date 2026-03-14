@@ -7,13 +7,6 @@ resources:
   - ../../base
 
 patches:
-  # Remove the base Namespace (n8n) so it doesn't conflict with the prod app
-  - patch: |
-      $patch: delete
-      apiVersion: v1
-      kind: Namespace
-      metadata:
-        name: n8n
   # Fix SealedSecret template namespace so it matches n8n-dev
   - patch: |
       apiVersion: bitnami.com/v1alpha1
