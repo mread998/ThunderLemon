@@ -1,0 +1,39 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: n8n-dev
+
+resources:
+  - ../../base
+
+patches:
+  # Remove the base Namespace (homepage) so it doesn't conflict with the prod app
+  - patch: |
+      $patch: delete
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: n8n
+  - path: ingress-patch.yaml
+    target:
+      kind: Ingress
+      name: n8n
+  - path: certificate-patch.yaml
+    target:
+      kind: Certificate
+      name: n8n-tls
+  # Patch HOMEPAGE_ALLOWED_HOSTS for dev hostname
+  - patch: |
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: n8n
+      spec:
+        template:
+          spec:
+            containers:
+              - name: n8n
+
+    target:
+      kind: Deployment
+      name: n8n
