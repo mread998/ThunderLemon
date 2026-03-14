@@ -5,15 +5,40 @@ namespace: n8n-dev
 
 resources:
   - ../../base
+  - namespace.yaml
 
 patches:
-  # Remove the base Namespace (homepage) so it doesn't conflict with the prod app
+  # Remove the base Namespace (n8n) so it doesn't conflict with the prod app
   - patch: |
       $patch: delete
       apiVersion: v1
       kind: Namespace
       metadata:
         name: n8n
+  # Fix SealedSecret template namespace so it matches n8n-dev
+  - patch: |
+      apiVersion: bitnami.com/v1alpha1
+      kind: SealedSecret
+      metadata:
+        name: n8n-secrets
+        namespace: n8n-dev
+      spec:
+        encryptedData:
+          N8N_BASIC_AUTH_ACTIVE: AgAeeuu4oL+Mu2G972rPa0Es318Is7Rsogez4La3av6gV3uWiohSE71GbzgxvkhQvyZv6105ECniYzKBXiJZQrVYfJb9cGUBzjfRmXoOnW9pm+n0PKS/dg6LMf0gumO/2Y122u4vJIaD4bwfCWHo7yqHbCYaU47XbAJqcgTXbLAhdZl7eN936LyKa4lH+ts3RcwpbGGbzpeIKyZkX034zyD2DVgc7sNrMdfv8waNsEapdInJXdPRbStU7P8TFTCmtbwb9GO/h+5YTKE8IRd/gSoBEGL6yUfvJH29cF8moDuA8nqejtmzKbWyRPdJJkHqWhNcwAP6cxFST1s7WIs0Sey9wPsLM1/3njuM1Rw/rnV1aSXFrueellTnLK7PjL3Ulj6K5MvNQu/u+ZXXj2+gnnvwQBlYeAX+yCOFG6WZiCAtvm02zzInN+B+5V8MPk7BjLLW9ddmdhQaMmrRt8BwuJSwN7NvTO9g2ESJzWoNYFSyi+3qD8orYd4tV/fjOmVmaz8NTutGQeDMYuO8nk42v5uvgRkhhy5u7uzp736TNnb8JRtI6Mhj+wwrZBYNQNg0ffawQWjYwHfn9Hlj6vSn4tySOl++OC8rTyu4RZt/DtcTy9g28P4mlsoUm03zU8Za7j9j1V01Y+9ov7IewG9AaCQiJx73qDq0tdPMkl275e3IYFBUwO44NjOxDLmm4Q+CTfwT6+Hf
+          N8N_BASIC_AUTH_PASSWORD: AgCUt88sLcRo9S2LeMsd2+QiR01GzUU4Lwr+8rGfXm2YhemwsVX5u4ei42AV+1cQeZrPqUjq29YgjTo0DZcTiaN97MvUk/pWAPVhXXbfRXDOu+s56/BTIi9LxO8gLaJd9QssoYHV6jpOLnq/xXLlMIuM0x/vp/HtLTFBcRWKvoyW5C+bWbpOYmZBlT/Xw+Cb7ErUNPcJvMOIGh0qw0EPHp7Xz5PaBTwpucESOkFT+j0Rr+KywtkfiU7xtjxis5ZhjHKdLg/WCO4/d/TYK+TWv22UzFQXuOlU09cS+CXug3NdRzi3SqomFEM2W1txlHBYVTZhnXD/206H6vfo5KUISA3gjB786l1uz76TJuRVq1lcWsoiqw+nIEa68fWLdljKWuV/LP+GqlvsSluqSV4Ua7EhmBrOfMrxObN/7l7cY0v7wMuy2vgHZ70SGOAgFbDtjI7X6ezHOZIq/X5k0RNkOHU9yvFadyZSEPFDPffOtJy5My/WOldqXLJUo/zPLqDp4Pru7uoMIbrKuOjoeJUbQcqz0sNNMnOJfa2c8av9+Q/oRi+P6l6C+10rHhJ8g8L7Bqu7UB1RW5QYUG3fdKxPWt3nof8aLQX0hWgPhQ2m4iAspeF2otGKvcTmJ2yDDEi6NiDrEAwmj0vrwaGM/BXJRY3GzEg+CYz7STG7pJ7VYocn4hWd82VARvcy5DqjTAwpgVbXKSfGX/Pd0dE=
+          N8N_BASIC_AUTH_USER: AgAsd64BRCQM+Ht+/qCQ0dQVGSAn8xEWeLLGmTy9bIr1ovFoaAfv8mz7ZkW9qvtmaGHZibZOQFsuR2Vr0gPzSjG3BH/Nyab6uLLub8AHnukhq6/hSTNFrnC48X959G4+qHEucYpm1JBRdYhxNgASPNT9KYVJXTM5TK84iz2g6+ml1e1Kh5yj0aJ4UipCtNTN/0OprAKCMjaekZXvemZvcl0jJ1sVT1unrZvrxgq6z0dNU8FyebvFkt/7iZh+8VF0Xo9ITZldOLx2jPO2LcSxZTLwbH26WJxdtgmY2wqeHqphS/5TsPTND59H2dUdT8vuVtwCGLKOb3wdbNqxxawyTAgdbQKGwZTrQ4SxvsAcl/O2fRjES2anbgZyEFKWXL+Aw6songuTS93DhoEyGtYt7WDTdTuUH9/CE0hPdRjb/BMVpY3R66Z15/3XpmPrTbsP1Hwo5V0BA0UATj/0tcx3aKAY+JsrrOGWcDD8dJdxKzC9ZyE+7BSlSuuzghreYvfbaNV6qM2BVrRtonpy60p8TXLFA8bEQhXYWjSG87c/8mUGJcKZWLm9YZQHVeBEmWhj3O/3inbUXW0f1o0SfJUzkuICP1lIw71LaD6oHXPV+oj7MNj2nhvstS1Fq/E5+RO0hkKrxvXCVuKgeyGIHUn3DlI314hCjcztHnJBLQ39CyamA4vicODUcG6WLtrb2mME+5Ryy9cR1g==
+          N8N_ENCRYPTION_KEY: AgACIdUcUEMPMNBtfpC4u4tI0DXPKbMlDORqKxvIZTtEVlPlNFu9C6M8zsM3DkFTa03meSvgYDR4mRq28dThKETS7zCJ7D1vwvE9hu23Ssq8WbNx9iqQ5uFUKGffizlwBNmbI1Pvm88mo3v619HwNu/DvV9DDIAHz3Dzmpv0N1HoGylSqxRQOOzmiRgl2GKQ8C/VgCu5EjMfGV7D874iy2S+FEaDee++9nDQKeMiQRa+W1NrvhURd/HjvoJEOR2C1WF/0b75MpAeaE+VHEcyQk95k0u9TyijWPQ3Nlj/8W9HciSo9KfOcKePVfCDch5vmf69gY9/2HmKQ6knZ8S2Sn8XPl6GIkA7ap6nxLrx4K0cDWpU2Sl025dvTUm/7hfCveoO2mkNZQ/Iew36+CO7PhUC8EtpR0HSnDu/uYGxGvxhuXC8TnnavhGxndhOOvqEIs4GgmmPYRRB2VQ0wyXzp0XBkYfAGNI2H9xhvl3AyWJ0yMS2O/LVzeNJEd2QEWM7h03SsFRQZO465CxVe4ADVKUpGiR1AwU2kWrvKPu4mrsWPdvE4qVnLaWe5CygOBPez/NXV1kIEGfobdQ+GhgRm48hbJEETYx4huiHhHEytV/FrCUSGv6cRL0Z0ZTO+AkwLbOZnQS/bakqoChq6CmKMfFEEEkiiEjRJr/twhK0ZW0+FP7KmmgUdv53G3bsoRV1Dw72uNFW2Cwcn7eWGom5FK3ku39rzwlSUO/D/vHk
+          POSTGRES_DB: AgByYmEYQB07VJR5uIOxxjkdxdKo/2zP4QGKByg3unpaTRLP1tIJWtoCa250essshzb93gKwuJkuegpEMb30RTSR1D8ek+ZcugCCrlaI9FmllKkSzNpXBDZxmNy0NiwRjeoPCB7Phc7w3Epj0/fv+JpGzr12qNxEds6/iOyHXQRhrzY5F8eRI+aw6f+k/Yf/nsqxdctgnCw7Oa4wLry1Jn7GJKiXXFI82usO61WwFtnak/lf/TsNefRT0581Juobx/eYOjYd4vjB2/CaWK8ov1dYutrCsvSCiv/3sJ1iCz5KY38wWNqv/sTr6yctEJiC00y42vt5hI+7yxiJjYPObVFAYvLw2i7U/XUgWH3FgmPQMfTxe0RpMpF6n/PyYMnyLSpQt7GhvFX5Jxx1zUXDHNqVMr/lv6wwZs06qYUu12SVlzZ87HuCdYNavxnr6VhFD/1SisIwUeu5P/myyQzqnyxhvMq6i9H3aa/3Cc7G3Ci4NszU/HLZ0OzuVQOlVaE21i+IX5GEEa6nnnPZtvipkNCDN4X1FaWn9IB/QQHE0hjOLcJ9YwItS05Ho5VA3RjCPX0i9J+gVW2eyLlApaf1LYq1KhNhyI/aoHc/XK659k300Cdl16DoFF6hiVvzy7yl8R3pxD14UYALsoiBIEP/AxTPI/Bq8zdY2gF2bo/zxxfZeKUcWjSJkB584tySbiCQ8PLjj5U=
+          POSTGRES_PASSWORD: AgCyzs9NuB0DaPpuOpaWqYAoovQwkrAc7FOpkvIWjsG2Y5+qnGumTHvaJBalR1AV2x3dxoS1I8tYSsQBc676zmCXnpz3e3A9eoenMwNM0dOyOfqjbTZsIZsFWn5vvJ0JTjpmLZJzLIpl5NbmGW4Z9PZvhxQDGDLYihUptWfhMFMYSWeouhwYf8a11w/n4up9qEfbAWvMB3NV/B7qSUVW1MYMb5wPp5ua+uBlksXZzcel25KC7xAnfw3nY6RPw5YH/YXotADi+80JlpASKR24hZDnOOe6g6s/xR0PB4DIsnaBGswmrND70uaMFXlYIowiop4WXgx7QSA59YwmHlbEmxk6apu/3It2NmJy+5XE7j31c1bDs0OF/JHTj+txxitDk37oFH1XKDyxGez0p5kHOeJnJL3CG07tJxxpsvMiqQw5hG+JYN8KS0pbvFSeJCicUNa+vp5M14TOk6uPlPmBnu6EU9tszqPvrUPHAutYvHpoIdpLmDW7t56IPUq4gkumArG1piL7x2VB5N92+5BhxF+EVnxeO3eQagcC+lXmJNkF3WljFLyIlZaS/tBqXQ1mtPTf1JAzCvq97Zf3YjHSxfRAOiV0JE2T05pK7l76YdTb3rY73/QnsWyluPmvYRYkcbiCbT7Qe1GzbUHpC9QMgsytkpWk/ysJOWGgz0p6vqzQWc5JXQiLeIbDxQuW3liK+t3sKkJkokWtDl8=
+          POSTGRES_USER: AgASyzfU/whFehJbHhZGVNNM0wYyt9JK/NQsDLv5Y+OSjwuDnN3JVTs7JG3A0MJblO876WY9LoB/L5zqzTnnjERS7C6TrQnFgwr5BFt2qfyyfKjZSI16t2sEMRaht9lwc889mDjhS2Aneb/fNSoX2RHUUiLbhfe5M3mNeuARsQRaokYP1kqzaMRz/N92GWf+sEGYQOsHMrUAyEmKSc42fiQxIKz9jCzjR+yRfQapAlnugNRSjrNXoTp57LmJo0tGLxh9Joflf5S3HqRgCkQd/r423WX4yXff2AIieZ5++/GdWcSaMuqUuAp0uSO+M+YvZHGu7040COV/9GnS6PdZ/nBinzE4qL4pneIhgD54YO83kBf8obHwOG7QnZl4+hHd0z3ixXE8pt6wMJk/kU1jtSIoJ1C0RgquWtXZEMVouCbqlOC4raKSOV2q47MyX/VbGlkuM7pj6LLR31HBP2zEMshi1UodsL/HfxgwFfTHJmDO8vFaPMj2SQmbpnIGJ8kXbWq5OADJYH/3AFcVNOflM4RCN5nTc6lcWDzOVt72L4J0GRdrUxHOTGzQzkoH2UQGdvTcYywo8LrI6oODWn4tnifxJB52swLN16G+5KpFFQhxX55LXUW3+1CLF3Mj4sy3iErTUjLtr/B8mB8fGPnxNqgfZhHHWH/RD+eBbA3E4ymtgO7yO4LOMtFBX8fkJaz9h4Qu/vc=
+        template:
+          metadata:
+            name: n8n-secrets
+            namespace: n8n-dev
+          type: Opaque
+    target:
+      kind: SealedSecret
+      name: n8n-secrets
   - path: ingress-patch.yaml
     target:
       kind: Ingress

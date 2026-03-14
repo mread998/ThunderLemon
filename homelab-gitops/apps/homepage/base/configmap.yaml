@@ -168,10 +168,6 @@ data:
             description: recipies
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mealie.png
             href: https://mealie.thundertest.org
-        - mealie-dev:
-            description: mealie dev instance
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mealie.png
-            href: https://mealie-dev.thundertest.org
         # - metube:
             # description: youtube grabber
             # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/metube.png
@@ -188,7 +184,12 @@ data:
             # description:
             # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre.png
             # href: https://calibre.thundertest.org
-
+    - Development:
+        - mealie-dev:
+            description: mealie dev instance
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mealie.png
+            href: https://mealie-dev.thundertest.org
+            
   widgets.yaml: |
     - resources:
         cpu: true
