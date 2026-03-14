@@ -19,3 +19,19 @@ patches:
     target:
       kind: Certificate
       name: awx-tls
+  # SealedSecrets are namespace-scoped — base secrets (sealed for 'awx') cannot
+  # be reused in 'awx-dev'. These patches replace the encrypted values with
+  # dev-namespace sealed equivalents.
+  # Fill in the REPLACE_WITH_SEALED_VALUE placeholders (see secrets.template.yaml).
+  - path: awx-admin-patch.yaml
+    target:
+      kind: SealedSecret
+      name: awx-admin-password
+  - path: awx-secret-key-patch.yaml
+    target:
+      kind: SealedSecret
+      name: awx-secret-key
+  - path: awx-postgres-config-patch.yaml
+    target:
+      kind: SealedSecret
+      name: awx-postgres-configuration

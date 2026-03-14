@@ -185,10 +185,23 @@ data:
             # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre.png
             # href: https://calibre.thundertest.org
     - Development:
+        - homepage-dev:
+            description: homepage dev instance
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/homepage.png
+            href: https://homepage-dev.thundertest.org
         - mealie-dev:
             description: mealie dev instance
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/mealie.png
             href: https://mealie-dev.thundertest.org
+        - n8n0dev:
+            description: n8n dev instance
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/n8n.png
+            href: https://n8n-dev.thundertest.org
+        - awx-dev:
+            description: awx dev instance
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/awx.png
+            href: https://awx-dev.thundertest.org
+
             
   widgets.yaml: |
     - resources:
