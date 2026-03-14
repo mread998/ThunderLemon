@@ -5,7 +5,6 @@ namespace: n8n-dev
 
 resources:
   - ../../base
-  - namespace.yaml
 
 patches:
   # Remove the base Namespace (n8n) so it doesn't conflict with the prod app
