@@ -7,13 +7,10 @@ spec:
   volumeClaimTemplates:
     - metadata:
         name: pgdata
-        annotations:
-          # Use 1 replica in dev — faster scheduling, less overhead
-          volume.longhorn.io/number-of-replicas: "1"
       spec:
         accessModes:
           - ReadWriteOnce
         resources:
           requests:
             storage: 5Gi
-        storageClassName: longhorn
+        storageClassName: longhorn-dev

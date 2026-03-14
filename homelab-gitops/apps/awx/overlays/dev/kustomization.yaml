@@ -5,6 +5,7 @@ namespace: awx-dev
 
 resources:
   - ../../base
+  - longhorn-dev-storageclass.yaml
 
 patches:
   - path: namespace-patch.yaml
