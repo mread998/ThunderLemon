@@ -35,3 +35,7 @@ patches:
     target:
       kind: SealedSecret
       name: awx-postgres-configuration
+  - path: postgres-storage-patch.yaml
+    target:
+      kind: StatefulSet
+      name: postgres
