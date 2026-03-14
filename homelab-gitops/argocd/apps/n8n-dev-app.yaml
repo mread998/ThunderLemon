@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: n8n-dev
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mread998/ThunderLemon.git
+    targetRevision: Development
+    path: homelab-gitops/apps/n8n/overlays/dev
+    kustomize: {}
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: n8n-dev
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

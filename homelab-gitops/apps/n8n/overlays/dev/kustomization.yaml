@@ -22,7 +22,6 @@ patches:
     target:
       kind: Certificate
       name: n8n-tls
-  # Patch HOMEPAGE_ALLOWED_HOSTS for dev hostname
   - patch: |
       apiVersion: apps/v1
       kind: Deployment
@@ -33,7 +32,11 @@ patches:
           spec:
             containers:
               - name: n8n
-
+                env:
+                  - name: N8N_HOST
+                    value: "n8n-dev.thundertest.org"
+                  - name: WEBHOOK_URL
+                    value: "https://n8n-dev.thundertest.org/"
     target:
       kind: Deployment
       name: n8n

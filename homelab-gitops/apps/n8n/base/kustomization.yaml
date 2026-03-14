@@ -7,3 +7,4 @@ resources:
   - postgres.yaml
   - n8n.yaml
   - ingress.yaml
+  - certificate-n8n.yaml
