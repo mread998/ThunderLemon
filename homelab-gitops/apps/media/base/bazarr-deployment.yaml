@@ -13,6 +13,13 @@ spec:
       labels:
         app: bazarr
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: bazarr
       containers:
         - name: bazarr
           image: ghcr.io/linuxserver/bazarr:latest

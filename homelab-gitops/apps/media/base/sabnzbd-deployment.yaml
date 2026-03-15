@@ -13,6 +13,13 @@ spec:
       labels:
         app: sabnzbd
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: sabnzbd
       containers:
         - name: sabnzbd
           image: ghcr.io/linuxserver/sabnzbd:latest

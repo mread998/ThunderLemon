@@ -13,6 +13,13 @@ spec:
       labels:
         app: plex
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: plex
       containers:
         - name: plex
           image: ghcr.io/linuxserver/plex:latest

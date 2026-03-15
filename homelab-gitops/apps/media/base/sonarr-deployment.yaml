@@ -13,6 +13,13 @@ spec:
       labels:
         app: sonarr
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: sonarr
       containers:
         - name: sonarr
           image: ghcr.io/linuxserver/sonarr:latest
