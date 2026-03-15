@@ -13,6 +13,13 @@ spec:
       labels:
         app: stash
     spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: stash
       containers:
         - name: stash
           image: stashapp/stash:latest
