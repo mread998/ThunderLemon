@@ -13,7 +13,7 @@ spec:
     requests:
       storage: 10Gi
 
-# Configuration - Radarr
+# # Configuration - Radarr
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -43,7 +43,7 @@ spec:
     requests:
       storage: 10Gi
 
-# Configuration - Bazarr
+# # Configuration - Bazarr
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -57,6 +57,8 @@ spec:
   resources:
     requests:
       storage: 5Gi
+
+# Configuration - Prowlarr
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -70,6 +72,51 @@ spec:
   resources:
     requests:
       storage: 5Gi
+
+# Configuration - SABnzbd
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sabnzbd-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+
+# # Configuration - Jellyfin
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jellyfin-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 20Gi
+
+# # Configuration - Plex
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: plex-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 20Gi
 
 # Downloads NFS Storage
 ---
@@ -131,47 +178,4 @@ spec:
     requests:
       storage: 500Gi
 
-# Configuration - SABnzbd
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: sabnzbd-config
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: longhorn
-  resources:
-    requests:
-      storage: 10Gi
 
-# Configuration - Jellyfin
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: jellyfin-config
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: longhorn
-  resources:
-    requests:
-      storage: 20Gi
-
-# Configuration - Plex
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: plex-config
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: longhorn
-  resources:
-    requests:
-      storage: 20Gi
