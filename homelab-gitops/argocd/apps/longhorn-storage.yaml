@@ -27,3 +27,11 @@ spec:
           defaultClassReplicaCount: 1
         preUpgradeChecker:
           jobEnabled: false
+        ingress:
+          enabled: true
+          ingressClassName: nginx
+          host: longhorn.thundertest.org
+          tls: true
+          tlsSecret: longhorn-tls
+          annotations:
+            cert-manager.io/cluster-issuer: selfsigned
