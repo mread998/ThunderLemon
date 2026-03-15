@@ -1,0 +1,62 @@
+---
+- name: Update system packages
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  tasks:
+    - name: Update apt cache and upgrade packages (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        upgrade: dist
+        autoclean: yes
+        autoremove: yes
+      when: ansible_pkg_mgr == 'apt'
+      tags: update
+
+    - name: Update yum packages (RedHat/CentOS 6-7)
+      yum:
+        name: '*'
+        state: latest
+      when: ansible_pkg_mgr == 'yum'
+      tags: update
+
+    - name: Update dnf packages (Fedora/CentOS 8+/RHEL 8+)
+      dnf:
+        name: '*'
+        state: latest
+      when: ansible_pkg_mgr == 'dnf'
+      tags: update
+
+    # - name: Update pacman packages (Arch/Manjaro)
+    #   pacman:
+    #     update_cache: yes
+    #     upgrade: yes
+    #   when: ansible_pkg_mgr == 'pacman'
+    #   tags: update
+
+    # - name: Update zypper packages (openSUSE)
+    #   zypper:
+    #     name: '*'
+    #     state: latest
+    #   when: ansible_pkg_mgr == 'zypper'
+    #   tags: update
+
+    # - name: Update apk packages (Alpine)
+    #   apk:
+    #     update_cache: yes
+    #     upgrade: yes
+    #   when: ansible_pkg_mgr == 'apk'
+    #   tags: update
+
+    # - name: Update pkg packages (FreeBSD)
+    #   pkgng:
+    #     name: '*'
+    #     state: latest
+    #   when: ansible_pkg_mgr == 'pkg'
+    #   tags: update
+
+    - name: Display package manager used
+      debug:
+        msg: "Updated packages using {{ ansible_pkg_mgr }}"
+      tags: always

@@ -1,0 +1,131 @@
+---
+- name: Clean reset AI stack (keep Docker installed)
+  hosts: all
+  become: true
+  gather_facts: false
+
+  vars:
+    ai_stack_dir: "/opt/ai-stack"
+    ai_containers:
+      - ollama
+      - openwebui
+      - sillytavern
+      - comfyui
+
+    # Images used by your stack (remove only these)
+    ai_images:
+      - "ollama/ollama:latest"
+      - "ghcr.io/open-webui/open-webui:latest"
+      - "ghcr.io/sillytavern/sillytavern:latest"
+      - "yanwk/comfyui-boot:cu128-slim"
+
+  tasks:
+    - name: Show planned actions
+      debug:
+        msg:
+          - "Will remove containers: {{ ai_containers }}"
+          - "Will remove images: {{ ai_images }}"
+          - "Will delete directory: {{ ai_stack_dir }}"
+          - "Docker will NOT be uninstalled; unrelated containers/images will not be touched."
+
+    - name: Check Docker is available
+      command: docker version
+      register: docker_version
+      changed_when: false
+
+    - name: Stop AI stack containers if they exist
+      shell: |
+        set -e
+        for c in {{ ai_containers | join(' ') }}; do
+          if docker ps -a --format '{{ "{{.Names}}" }}' | grep -Fxq "$c"; then
+            docker stop "$c" >/dev/null 2>&1 || true
+          fi
+        done
+      args:
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Capture container IDs for AI stack containers (if present)
+      shell: |
+        set -e
+        ids=""
+        for c in {{ ai_containers | join(' ') }}; do
+          id="$(docker ps -aq -f "name=^/${c}$" || true)"
+          if [ -n "$id" ]; then
+            ids="$ids $id"
+          fi
+        done
+        echo "$ids"
+      args:
+        executable: /bin/bash
+      register: ai_container_ids
+      changed_when: false
+
+    - name: Gather named volumes attached to those containers (best effort)
+      shell: |
+        set -e
+        ids="{{ ai_container_ids.stdout | trim }}"
+        if [ -z "$ids" ]; then
+          exit 0
+        fi
+        # List mounts that are docker volumes (not bind mounts), print unique volume names
+        docker inspect $ids \
+          --format '{{ "{{range .Mounts}}{{if eq .Type \"volume\"}}{{.Name}}{{\"\\n\"}}{{end}}{{end}}" }}' \
+          | sed '/^$/d' | sort -u
+      args:
+        executable: /bin/bash
+      register: ai_volumes
+      changed_when: false
+      failed_when: false
+
+    - name: Remove AI stack containers
+      shell: |
+        set -e
+        for c in {{ ai_containers | join(' ') }}; do
+          if docker ps -a --format '{{ "{{.Names}}" }}' | grep -Fxq "$c"; then
+            docker rm -f "$c" >/dev/null
+          fi
+        done
+      args:
+        executable: /bin/bash
+      changed_when: true
+      failed_when: false
+
+    - name: Remove AI stack images (only the known ones)
+      shell: |
+        set -e
+        for img in {{ ai_images | map('quote') | join(' ') }}; do
+          if docker image inspect $img >/dev/null 2>&1; then
+            docker rmi -f $img >/dev/null
+          fi
+        done
+      args:
+        executable: /bin/bash
+      changed_when: true
+      failed_when: false
+
+    - name: Remove attached named volumes (if any)
+      shell: |
+        set -e
+        vols="{{ ai_volumes.stdout | trim }}"
+        if [ -z "$vols" ]; then
+          exit 0
+        fi
+        echo "$vols" | while read -r v; do
+          [ -n "$v" ] && docker volume rm -f "$v" >/dev/null 2>&1 || true
+        done
+      args:
+        executable: /bin/bash
+      changed_when: true
+      failed_when: false
+
+    - name: Delete /opt/ai-stack (entire directory)
+      file:
+        path: "{{ ai_stack_dir }}"
+        state: absent
+
+    - name: Recreate /opt/ai-stack as empty folder (optional, keeps things tidy)
+      file:
+        path: "{{ ai_stack_dir }}"
+        state: directory
+        mode: "0755"

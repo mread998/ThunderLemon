@@ -1,0 +1,30 @@
+---
+- name: List Ollama models in the ollama Docker container
+  hosts: all
+  become: true
+  gather_facts: false
+
+  vars:
+    ollama_container_name: "ollama"
+    ollama_model: "llama3.1:8b"
+
+  tasks:
+    - name: Ensure the ollama container is running
+      ansible.builtin.command: "docker inspect -f '{{'{{'}}.State.Running{{'}}'}}' {{ ollama_container_name }}"
+      register: ollama_running
+      changed_when: false
+
+    - name: Fail if the ollama container is not running
+      ansible.builtin.fail:
+        msg: "Container '{{ ollama_container_name }}' is not running. Start it first (docker start {{ ollama_container_name }})."
+      when: ollama_running.stdout.strip() != "true"
+
+    - name: Pull Ollama model in container
+      ansible.builtin.command: "docker exec {{ ollama_container_name }} ollama ls"
+      register: pull_out
+      changed_when: true
+
+    - name: Show pull output
+      ansible.builtin.debug:
+        var: pull_out.stdout_lines
+

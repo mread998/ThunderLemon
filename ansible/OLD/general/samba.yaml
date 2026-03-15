@@ -1,0 +1,119 @@
+---
+- name: Update system and install Samba
+  hosts: all
+  become: yes
+  gather_facts: yes
+  vars:
+    # Samba share configuration (customize as needed)
+    smb_shares:
+      - name: movies
+        path: "/mnt/sto1_data/data/movies"
+        guest: yes
+        force_user: nobody
+      - name: tv
+        path: "/mnt/data/tv"
+        guest: yes
+        force_user: nobody
+      - name: music
+        path: "/mnt/data/music"
+        guest: yes
+        force_user: nobody
+      - name: dirt
+        path: "/mnt/data/dirt"
+        guest: yes
+        force_user: nobody
+      - name: learn
+        path: "/mnt/data/learn"
+        guest: yes
+        force_user: nobody
+      - name: misc
+        path: "/mnt/data/misc"
+        guest: yes
+        force_user: nobody
+
+  tasks:
+    - name: Update apt cache and upgrade packages (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        upgrade: dist
+        autoclean: yes
+        autoremove: yes
+      when: ansible_pkg_mgr == 'apt'
+      tags: update
+
+    - name: Update yum packages (RedHat/CentOS 6-7)
+      yum:
+        name: '*'
+        state: latest
+      when: ansible_pkg_mgr == 'yum'
+      tags: update
+
+    - name: Update dnf packages (Fedora/CentOS 8+/RHEL 8+)
+      dnf:
+        name: '*'
+        state: latest
+      when: ansible_pkg_mgr == 'dnf'
+      tags: update
+
+    - name: Install Samba (Debian/Ubuntu)
+      apt:
+        name: samba
+        state: present
+      when: ansible_pkg_mgr == 'apt'
+      tags: samba
+
+    - name: Install Samba (RedHat/CentOS/Fedora)
+      package:
+        name: samba
+        state: present
+      when: ansible_pkg_mgr in ['yum', 'dnf']
+      tags: samba
+
+    - name: Create Samba share directories
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+        recurse: yes
+      loop: "{{ smb_shares }}"
+      tags: samba
+
+    - name: Add Samba shares to smb.conf
+      blockinfile:
+        path: /etc/samba/smb.conf
+        marker: ";; ANSIBLE MANAGED SHARE: {{ item.name }}"
+        block: |
+          [{{ item.name }}]
+            path = {{ item.path }}
+            browseable = yes
+            read only = no
+            guest ok = {{ item.guest | default('no') }}
+            create mask = 0644
+            directory mask = 0755
+            force user = {{ item.force_user | default('nobody') }}
+      loop: "{{ smb_shares }}"
+      notify: Restart Samba
+      tags: samba
+
+    - name: Enable and start Samba services (systemd)
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+        daemon_reload: yes
+      loop:
+        - smbd.service
+        - nmbd.service
+      tags: samba
+
+    - name: Display Samba configuration status
+      debug:
+        msg: "Samba installed and configured with shares: {{ smb_shares | map(attribute='name') | list }}"
+      tags: always
+
+  handlers:
+    - name: Restart Samba
+      command: /bin/sh -c 'systemctl restart smbd || systemctl restart smb || service smbd restart || service smb restart'
+      listen: "Restart Samba"

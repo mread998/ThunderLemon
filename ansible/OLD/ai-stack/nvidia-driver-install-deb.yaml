@@ -1,0 +1,64 @@
+---
+- name: Install NVIDIA driver 535 on Ubuntu 22.04 and reboot if needed
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    nvidia_driver_pkg: nvidia-driver-535
+
+  pre_tasks:
+    - name: Fail if not Ubuntu
+      ansible.builtin.fail:
+        msg: "This playbook is intended for Ubuntu hosts only."
+      when: ansible_facts['distribution'] != "Ubuntu"
+
+    - name: Update apt cache
+      ansible.builtin.apt:
+        update_cache: true
+        cache_valid_time: 3600
+
+    - name: Install prerequisites
+      ansible.builtin.apt:
+        name:
+          - ubuntu-drivers-common
+          - pciutils
+        state: present
+
+  tasks:
+    - name: Check for NVIDIA GPU presence
+      ansible.builtin.command: bash -lc "lspci | grep -i nvidia || true"
+      register: nvidia_pci
+      changed_when: false
+
+    - name: Show NVIDIA PCI devices (if any)
+      ansible.builtin.debug:
+        var: nvidia_pci.stdout_lines
+
+    - name: Install NVIDIA driver package (535)
+      ansible.builtin.apt:
+        name: "{{ nvidia_driver_pkg }}"
+        state: present
+      register: nvidia_driver_install
+
+    # Optional but useful: ensure kernel modules are available for this kernel
+    - name: Ensure DKMS is present (helps build modules if needed)
+      ansible.builtin.apt:
+        name: dkms
+        state: present
+
+    - name: Reboot if NVIDIA driver package changed
+      ansible.builtin.reboot:
+        reboot_timeout: 1200
+        msg: "Reboot initiated by Ansible after installing NVIDIA driver 535"
+      when: nvidia_driver_install.changed
+
+    - name: Verify nvidia-smi after reboot
+      ansible.builtin.command: nvidia-smi
+      register: nvidia_smi
+      changed_when: false
+      failed_when: nvidia_smi.rc != 0
+
+    - name: Show nvidia-smi output
+      ansible.builtin.debug:
+        var: nvidia_smi.stdout_lines

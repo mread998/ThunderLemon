@@ -1,0 +1,129 @@
+---
+# AWX/Ansible playbook to partition /dev/sdb with GPT (sgdisk), format as ext4 and mount to /opt/ai-stack
+# WARNING: This playbook can destroy data on /dev/sdb. By default it will NOT overwrite an existing filesystem.
+# To force destructive behavior set `force: true` when running (e.g. --extra-vars "force=true").
+
+- name: Partition, format and mount /dev/sdb -> /opt/ai-stack
+  hosts: all
+  become: true
+  gather_facts: yes
+
+  vars:
+    device: /dev/sdb
+    part: /dev/sdb1
+    mount_point: /opt/ai-stack
+    fs_type: ext4
+    label: ai-stack
+    # Default is false to avoid accidental destruction. Set force=true to allow zap/format.
+    force: false
+
+  tasks:
+    - name: Ensure gdisk (sgdisk) is installed
+      package:
+        name: gdisk
+        state: present
+
+    - name: Check that device exists
+      ansible.builtin.stat:
+        path: "{{ device }}"
+      register: device_stat
+
+    - name: Fail if device not present
+      ansible.builtin.fail:
+        msg: "Device {{ device }} not found on target. Aborting."
+      when: not device_stat.stat.exists
+
+    - name: Check for partition device ({{ part }})
+      ansible.builtin.stat:
+        path: "{{ part }}"
+      register: part_stat
+
+    - name: Check existing filesystem on partition
+      ansible.builtin.command:
+        cmd: "blkid -s TYPE -o value {{ part }}"
+      register: blkid_out
+      failed_when: false
+      changed_when: false
+
+    - name: Abort when partition already has a filesystem and force is false
+      ansible.builtin.fail:
+        msg: "Partition {{ part }} already has filesystem type {{ blkid_out.stdout }}. Rerun with force=true to overwrite."
+      when:
+        - blkid_out.stdout | length > 0
+        - not force
+
+    - name: Create GPT partition and single partition on {{ device }} (destructive if force=true)
+      ansible.builtin.command:
+        cmd: >-
+          sgdisk --zap-all {{ device }} &&
+          sgdisk -n 1:0:0 -t 1:8300 -c 1:"{{ label }}" {{ device }}
+      args:
+        warn: false
+      register: sgdisk_out
+      changed_when: sgdisk_out.rc == 0
+      failed_when: sgdisk_out.rc != 0
+      when: part_stat.stat.exists == false or force
+
+    - name: Inform: partition creation skipped (exists and not forcing)
+      ansible.builtin.debug:
+        msg: "Partition {{ part }} already exists; skipping sgdisk because force is not set."
+      when: part_stat.stat.exists and not force
+
+    - name: Ensure kernel knows about partition table (partprobe)
+      ansible.builtin.command:
+        cmd: partprobe {{ device }}
+      args:
+        warn: false
+      when: part_stat.stat.exists == false or force
+      changed_when: false
+
+    - name: Wait for partition device to appear
+      ansible.builtin.wait_for:
+        path: "{{ part }}"
+        state: present
+        timeout: 30
+      when: part_stat.stat.exists == false or force
+
+    - name: Re-check filesystem after partitioning
+      ansible.builtin.command:
+        cmd: "blkid -s TYPE -o value {{ part }}"
+      register: blkid_after
+      failed_when: false
+      changed_when: false
+
+    - name: Format partition as {{ fs_type }} if no filesystem present or force=true
+      ansible.builtin.command:
+        cmd: "mkfs.{{ fs_type }} -F -L {{ label }} {{ part }}"
+      register: mkfs_out
+      failed_when: mkfs_out.rc != 0
+      when:
+        - (blkid_after.stdout | length == 0) or force
+
+    - name: Create mount point
+      ansible.builtin.file:
+        path: "{{ mount_point }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+
+    - name: Mount filesystem and ensure fstab entry
+      ansible.builtin.mount:
+        path: "{{ mount_point }}"
+        src: "{{ part }}"
+        fstype: "{{ fs_type }}"
+        opts: defaults
+        state: mounted
+        dump: 0
+        passno: 2
+
+    - name: Show final mount status
+      ansible.builtin.command:
+        cmd: mount | grep "{{ mount_point }}"
+      register: mount_check
+      failed_when: false
+      changed_when: false
+
+    - name: Debug mount result
+      ansible.builtin.debug:
+        var: mount_check.stdout

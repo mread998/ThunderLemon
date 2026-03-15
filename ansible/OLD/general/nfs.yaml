@@ -1,0 +1,153 @@
+---
+- name: Update system and install NFS
+  hosts: all
+  become: yes
+  gather_facts: yes
+  vars:
+    # NFS export configuration (customize as needed)
+    nfs_exports:
+      - path: "/mnt/data/movies"
+        clients: "10.11.11.*"
+        options: "rw,sync,no_subtree_check"
+      - path: "/mnt/data/tv"
+        clients: "10.11.11.*"
+        options: "rw,sync,no_subtree_check"
+      - path: "/mnt/data/music"
+        clients: "10.11.11.*"
+        options: "rw,sync,no_subtree_check"
+      - path: "/mnt/data/dirt"
+        clients: "10.11.11.*"
+        options: "rw,sync,no_subtree_check"
+      - path: "/mnt/data/learn"
+        clients: "10.11.11.*"
+        options: "rw,sync,no_subtree_check"
+      - path: "/mnt/data/misc"
+        clients: "10.11.11.*"
+        options: "rw,sync,no_subtree_check"
+
+  tasks:
+    - name: Update apt cache and upgrade packages (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+        upgrade: dist
+        autoclean: yes
+        autoremove: yes
+      when: ansible_pkg_mgr == 'apt'
+      tags: update
+
+    - name: Update yum packages (RedHat/CentOS 6-7)
+      yum:
+        name: '*'
+        state: latest
+      when: ansible_pkg_mgr == 'yum'
+      tags: update
+
+    - name: Update dnf packages (Fedora/CentOS 8+/RHEL 8+)
+      dnf:
+        name: '*'
+        state: latest
+      when: ansible_pkg_mgr == 'dnf'
+      tags: update
+
+    - name: Install NFS Server (Debian/Ubuntu)
+      apt:
+        name:
+          - nfs-kernel-server
+          - nfs-common
+        state: present
+      when: ansible_pkg_mgr == 'apt'
+      tags: nfs
+
+    - name: Install NFS Server (RedHat/CentOS/Fedora)
+      package:
+        name:
+          - nfs-utils
+        state: present
+      when: ansible_pkg_mgr in ['yum', 'dnf']
+      tags: nfs
+
+    - name: Create NFS export directory if it doesn't exist
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        mode: '0755'
+      loop: "{{ nfs_exports }}"
+      tags: nfs
+
+    - name: Create NFS export directories
+      file:
+        path: "{{ item.path }}"
+        state: directory
+        owner: root
+        group: root
+        mode: '0755'
+        recurse: yes
+      loop: "{{ nfs_exports }}"
+
+
+    - name: Configure NFS exports
+      lineinfile:
+        path: /etc/exports
+        regexp: "^{{ item.path | regex_escape }}"
+        line: "{{ item.path }} {{ item.clients }}({{ item.options }})"
+        create: yes
+      loop: "{{ nfs_exports }}"
+      notify: Refresh NFS exports
+      tags: nfs
+
+    - name: Enable and start NFS server (Debian/Ubuntu)
+      service:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - nfs-server
+        - nfs-mountd
+        - rpcbind
+      when: ansible_pkg_mgr == 'apt'
+      tags: nfs
+
+    - name: Enable and start NFS server (RedHat/CentOS/Fedora)
+      service:
+        name: "{{ item }}"
+        enabled: yes
+        state: started
+      loop:
+        - nfs-server
+        - rpcbind
+      when: ansible_pkg_mgr in ['yum', 'dnf']
+      tags: nfs
+
+    # - name: Enable and start NFS server (Arch)
+    #   systemd:
+    #     name: "{{ item }}"
+    #     enabled: yes
+    #     state: started
+    #     daemon_reload: yes
+    #   loop:
+    #     - nfs-server.service
+    #     - rpc-mountd.service
+    #     - rpcbind.service
+    #   when: ansible_pkg_mgr == 'pacman'
+    #   tags: nfs
+
+    # - name: Enable and start NFS server (openSUSE)
+    #   service:
+    #     name: "{{ item }}"
+    #     enabled: yes
+    #     state: started
+    #   loop:
+    #     - nfs-server
+    #     - rpcbind
+    #   when: ansible_pkg_mgr == 'zypper'
+    #   tags: nfs
+
+    - name: Display NFS configuration status
+      debug:
+        msg: "NFS server installed and configured with exports: {{ nfs_exports | map(attribute='path') | list }}"
+      tags: always
+
+  handlers:
+    - name: Refresh NFS exports
+      command: exportfs -ra
+      listen: "Refresh NFS exports"

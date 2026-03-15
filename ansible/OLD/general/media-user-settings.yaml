@@ -1,0 +1,114 @@
+---
+- name: Create media user and group
+  hosts: all
+  become: true
+  gather_facts: true
+  vars:
+    username: media
+    uid: 1011
+    gid: 1011
+    home_dir: "/home/{{ username }}"
+  tasks:
+    - name: Ensure group '{{ username }}' exists with GID {{ gid }}
+      ansible.builtin.group:
+        name: "{{ username }}"
+        gid: "{{ gid }}"
+        state: present
+
+    - name: Ensure user '{{ username }}' exists with UID {{ uid }} and primary group '{{ username }}'
+      ansible.builtin.user:
+        name: "{{ username }}"
+        uid: "{{ uid }}"
+        group: "{{ username }}"
+        create_home: yes
+        home: "{{ home_dir }}"
+        shell: /bin/bash
+        state: present
+
+    - name: Ensure home directory exists and has correct ownership
+      ansible.builtin.file:
+        path: "{{ home_dir }}"
+        state: directory
+        owner: "{{ username }}"
+        group: "{{ username }}"
+        mode: '0755'
+
+    - name: Set ownership on additional movie path
+      ansible.builtin.file:
+        path: /mnt/data/movies
+        owner: media
+        group: media
+        mode: '0755'
+        recurse: yes
+
+    - name: Set ownership on additional TV path
+      ansible.builtin.file:
+        path: /mnt/data/tv
+        owner: media
+        group: media
+        mode: '0755'
+        recurse: yes  
+
+    - name: Set ownership on additional music path
+      ansible.builtin.file:
+        path: /mnt/data/music
+        owner: media
+        group: media
+        mode: '0755'
+        recurse: yes    
+
+    - name: Set ownership on additional dirt path
+      ansible.builtin.file:
+        path: /mnt/data/dirt
+        owner: media
+        group: media
+        mode: '0755'
+        recurse: yes    
+
+    - name: Set ownership on additional learn path
+      ansible.builtin.file:
+        path: /mnt/data/learn
+        owner: media
+        group: media
+        mode: '0755'
+        recurse: yes
+
+    - name: Set ownership on additional misc path
+      ansible.builtin.file:
+        path: /mnt/data/misc
+        owner: media
+        group: media
+        mode: '0755'
+        recurse: yes
+
+    - name: Find all directories under /mnt/data
+      ansible.builtin.find:
+        paths: /mnt/data
+        recurse: yes
+        file_type: directory
+      register: media_dirs
+
+    - name: Set directory permissions to 2775 and ensure ownership
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: media
+        group: media
+        mode: '2775'
+      loop: "{{ media_dirs.files }}"
+      when: media_dirs.matched > 0
+
+    - name: Find all files under /mnt/data
+      ansible.builtin.find:
+        paths: /mnt/data
+        recurse: yes
+        file_type: file
+      register: media_files
+
+    - name: Set file permissions to 0554 and ensure ownership
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        owner: media
+        group: media
+        mode: '0664'
+      loop: "{{ media_files.files }}"
+      when: media_files.matched > 0

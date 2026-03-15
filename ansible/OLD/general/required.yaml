@@ -1,0 +1,64 @@
+---
+- name: Install editing and networking tools
+  hosts: all
+  become: yes
+  gather_facts: yes
+
+  vars:
+    packages_debian:
+      - vim
+      - netcat
+      - net-tools
+      - nfs-common
+      - cifs-utils
+    packages_redhat:
+      - vim
+      - nmap-ncat
+      - net-tools
+      - nfs-utils
+      - cifs-utils
+
+  tasks:
+    - name: Update apt cache (Debian/Ubuntu)
+      apt:
+        update_cache: yes
+      when: ansible_facts.os_family == 'Debian'
+
+    - name: Update yum/dnf cache (RedHat/CentOS/Fedora)
+      yum:
+        update_cache: yes
+      when: ansible_facts.os_family == 'RedHat'
+
+    - name: Set package list based on OS family
+      set_fact:
+        pkg_list: "{{ packages_debian if ansible_facts.os_family == 'Debian' else packages_redhat }}"
+
+    - name: Install vim, netcat and net-tools (provides netstat)
+      package:
+        name: "{{ pkg_list }}"
+        state: present
+
+    - name: Verify installation (best-effort)
+      block:
+        - name: Check vim
+          command: vim --version
+          register: vim_check
+          ignore_errors: yes
+
+        - name: Check netcat (nc)
+          command: nc -h
+          register: nc_check
+          ignore_errors: yes
+
+        - name: Check netstat
+          command: netstat -V
+          register: netstat_check
+          ignore_errors: yes
+
+        - name: Show verification results
+          debug:
+            msg:
+              - "vim: {{ vim_check.rc if vim_check is defined else 'n/a' }}"
+              - "nc: {{ nc_check.rc if nc_check is defined else 'n/a' }}"
+              - "netstat: {{ netstat_check.rc if netstat_check is defined else 'n/a' }}"
+

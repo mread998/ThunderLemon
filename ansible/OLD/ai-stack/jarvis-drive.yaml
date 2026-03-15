@@ -1,0 +1,72 @@
+---
+- name: Ubuntu 22.04 - Partition with sgdisk, format ext4, and mount
+  hosts: all
+  become: true
+
+  vars:
+    disk_device: /dev/sdb          # whole disk (NOT /dev/sdb1)
+    part_number: 1
+    mount_point: /opt/ai-stack
+    filesystem_type: ext4
+    part_label: data
+    mount_opts: defaults
+
+  tasks:
+    - name: Install required packages
+      apt:
+        name:
+          - gdisk
+          - e2fsprogs
+          - util-linux
+        state: present
+        update_cache: yes
+
+    - name: Wipe existing partition table (DANGEROUS)
+      command: "sgdisk --zap-all {{ disk_device }}"
+      changed_when: true
+
+    - name: Create GPT partition using the whole disk
+      command: >
+        sgdisk
+        --new={{ part_number }}:0:0
+        --typecode={{ part_number }}:8300
+        --change-name={{ part_number }}:{{ part_label }}
+        {{ disk_device }}
+      changed_when: true
+
+    - name: Inform kernel of partition table changes
+      command: "partprobe {{ disk_device }}"
+      changed_when: true
+
+    - name: Determine partition path (handles nvme0n1 -> nvme0n1p1)
+      set_fact:
+        part_device: >-
+          {{ disk_device }}{{ 'p' if disk_device is match('^/dev/nvme') else '' }}{{ part_number }}
+
+    - name: Wait for partition node to appear
+      wait_for:
+        path: "{{ part_device }}"
+        timeout: 30
+
+    - name: Create ext4 filesystem (force)
+      command: "mkfs.ext4 -F {{ part_device }}"
+      changed_when: true
+
+    - name: Read filesystem UUID
+      command: "blkid -s UUID -o value {{ part_device }}"
+      register: fs_uuid
+      changed_when: false
+
+    - name: Create mount point
+      file:
+        path: "{{ mount_point }}"
+        state: directory
+        mode: "0755"
+
+    - name: Mount by UUID and persist
+      mount:
+        path: "{{ mount_point }}"
+        src: "UUID={{ fs_uuid.stdout }}"
+        fstype: "{{ filesystem_type }}"
+        opts: "{{ mount_opts }}"
+        state: mounted

@@ -1,0 +1,99 @@
+---
+- name: Install NVIDIA Container Toolkit and configure Docker runtime
+  hosts: all
+  become: true
+  gather_facts: true
+
+  vars:
+    nvidia_keyring_dir: /etc/apt/keyrings
+    nvidia_keyring_path: /etc/apt/keyrings/nvidia-container-toolkit.gpg
+    nvidia_repo_list_path: /etc/apt/sources.list.d/nvidia-container-toolkit.list
+    nvidia_gpgkey_url: https://nvidia.github.io/libnvidia-container/gpgkey
+
+  tasks:
+    - name: Ensure apt keyrings directory exists
+      ansible.builtin.file:
+        path: "{{ nvidia_keyring_dir }}"
+        state: directory
+        mode: "0755"
+
+    - name: Detect NVIDIA repo distribution string (ID+VERSION_ID from /etc/os-release)
+      ansible.builtin.shell: |
+        set -euo pipefail
+        . /etc/os-release
+        echo "${ID}${VERSION_ID}"
+      args:
+        executable: /bin/bash
+      register: distro_idver
+      changed_when: false
+
+    - name: Set NVIDIA repo list URL (matches your shell snippet)
+      ansible.builtin.set_fact:
+        nvidia_repo_list_url: "https://nvidia.github.io/libnvidia-container/stable/{{ distro_idver.stdout }}/nvidia-container-toolkit.list"
+
+    - name: Download NVIDIA GPG key to temporary location
+      ansible.builtin.get_url:
+        url: "{{ nvidia_gpgkey_url }}"
+        dest: /tmp/nvidia-container-toolkit.gpgkey
+        mode: "0644"
+
+    - name: Dearmor NVIDIA GPG key into apt keyring (idempotent)
+      ansible.builtin.command: >
+        gpg --dearmor -o {{ nvidia_keyring_path }} /tmp/nvidia-container-toolkit.gpgkey
+      args:
+        creates: "{{ nvidia_keyring_path }}"
+      register: dearmor_result
+
+    - name: Ensure keyring permissions are readable by apt
+      ansible.builtin.file:
+        path: "{{ nvidia_keyring_path }}"
+        mode: "0644"
+      when: dearmor_result is changed
+
+    - name: Fetch NVIDIA container toolkit repo list
+      ansible.builtin.uri:
+        url: "{{ nvidia_repo_list_url }}"
+        return_content: true
+      register: repo_list
+
+    - name: Inject signed-by into repo list content
+      ansible.builtin.set_fact:
+        repo_list_signed: >-
+          {{
+            repo_list.content
+            | regex_replace('^deb https://', 'deb [signed-by=' ~ nvidia_keyring_path ~ '] https://', multiline=True)
+            | regex_replace('^#deb https://', '#deb [signed-by=' ~ nvidia_keyring_path ~ '] https://', multiline=True)
+          }}
+
+    - name: Write NVIDIA repo list file
+      ansible.builtin.copy:
+        dest: "{{ nvidia_repo_list_path }}"
+        content: "{{ repo_list_signed }}"
+        owner: root
+        group: root
+        mode: "0644"
+      register: repo_file
+
+    - name: apt update (only when repo/key changed)
+      ansible.builtin.apt:
+        update_cache: true
+      when: repo_file is changed or dearmor_result is changed
+
+    - name: Install nvidia-container-toolkit
+      ansible.builtin.apt:
+        name: nvidia-container-toolkit
+        state: present
+
+    - name: Configure Docker to use NVIDIA runtime
+      ansible.builtin.command: nvidia-ctk runtime configure --runtime=docker
+      register: nvidia_ctk
+      changed_when: >
+        ('Updated' in (nvidia_ctk.stdout | default(''))) or
+        ('generated' in (nvidia_ctk.stdout | default(''))) or
+        (nvidia_ctk.rc == 0)
+
+    - name: Restart Docker
+      ansible.builtin.systemd:
+        name: docker
+        state: restarted
+        enabled: true
