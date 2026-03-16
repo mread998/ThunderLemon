@@ -444,380 +444,130 @@ spec:
           class: nginx
 ```
 ---
-## Step 8 – Storage (Longhorn)
+## Step 8 – Storage Longhorn
+Each server (contol plaine and workers) will get a  dedicated virtual disk, attached directly to the VM, used only by Longhorn.
+Giving predictable performance, clean failure domains, and zero weirdness when something goes wrong.
 
-### Design
-
-This build uses two Longhorn storage tiers:
-
-- **SSD tier (`ssd`)**
-  - Present on all Longhorn storage nodes
-  - Intended for app configs, databases, and latency-sensitive workloads
-
-- **HDD tier (`bulk`)**
-  - Present only on worker nodes
-  - Intended for media, downloads, backups, and large-capacity workloads
-
-### Recommended VM Layout
-
-- **Control nodes**
-  - OS disk
-  - 100 GB SSD disk for Longhorn
-- **Worker nodes**
-  - OS disk
-  - 100 GB SSD disk for Longhorn
-  - 1 TB HDD disk for Longhorn bulk storage
-
-### Important Proxmox Note
-
-For the 1 TB HDDs:
-- attach **one HDD-backed virtual disk to one worker VM on each physical Proxmox host**
-- avoid sharing one physical HDD across multiple Longhorn disks/VMs if possible
-- this keeps failure domains cleaner and makes replica placement more useful
-
-### Disk Layout by Node Type
-
-#### Control nodes
-Use:
-- `/mnt/longhorn-ssd`
-
-#### Worker nodes
-Use:
-- `/mnt/longhorn-ssd`
-- `/mnt/longhorn-hdd`
-
----
-
-### 8.1 Prepare the SSD disk on all Longhorn nodes
-
-Replace `/dev/sdb` with the correct SSD disk on each VM.
-
-Partition:
+Partition the drives
 ```bash
 gdisk /dev/sdb
 ```
+press n to create a new disk, and follow the prompts
+press w to write partiton
 
-Create a partition, write changes, then format:
+Format the disk
 ```bash
 mkfs.xfs /dev/sdb1
 ```
 
-Create mount point:
+create the mount point
 ```bash
-mkdir -p /mnt/longhorn-ssd
+mkdir -p /var/lib/longhorn
 ```
 
-Get the UUID:
+Capture the blkid
 ```bash
 blkid /dev/sdb1
 ```
+copy blkid for fstab
 
-Add to `/etc/fstab`:
+Update fstab
 ```bash
-UUID=xxxx-xxxx /mnt/longhorn-ssd xfs defaults,noatime 0 0
+vim /etc/fstab
+``` 
+
+add the following replace xxxx-xxxx with blkid
+```bash
+UUID=xxxx-xxxx  /var/lib/longhorn  xfs  defaults,noatime  0  0
 ```
 
-Mount it:
+Mount drive
 ```bash
 mount -a
 ```
 
-Set permissions:
+Longhorn config
+Longhorn runs as root, but Kubernetes still expects sane permissions. Cycle though the servers and verify correct permisions
+
 ```bash
-chown -R root:root /mnt/longhorn-ssd
-chmod 700 /mnt/longhorn-ssd
+sudo chown -R root:root /var/lib/longhorn
+sudo chmod 700 /var/lib/longhorn
 ```
 
----
-
-### 8.2 Prepare the HDD disk on worker nodes only
-
-Replace `/dev/sdc` with the correct HDD disk on each worker VM.
-
-Partition:
-```bash
-gdisk /dev/sdc
-```
-
-Format:
-```bash
-mkfs.xfs /dev/sdc1
-```
-
-Create mount point:
-```bash
-mkdir -p /mnt/longhorn-hdd
-```
-
-Get the UUID:
-```bash
-blkid /dev/sdc1
-```
-
-Add to `/etc/fstab`:
-```bash
-UUID=yyyy-yyyy /mnt/longhorn-hdd xfs defaults,noatime 0 0
-```
-
-Mount it:
-```bash
-mount -a
-```
-
-Set permissions:
-```bash
-chown -R root:root /mnt/longhorn-hdd
-chmod 700 /mnt/longhorn-hdd
-```
-
----
-
-### 8.3 Install required iSCSI packages on all Kubernetes nodes
-
-Longhorn requires `open-iscsi`.
-
-Ubuntu/Debian:
-```bash
-apt update
-apt install -y open-iscsi
-systemctl enable iscsid
-systemctl start iscsid
+Check if open-iscsi is active
+```bash 
 systemctl is-active iscsid
 ```
 
----
+If inactive run the following:
+Install iscsi client
+```bash 
+sudo apt-get update
+sudo apt-get install -y open-iscsi
+```
 
-### 8.4 Label Kubernetes nodes before installing Longhorn
+Enable and start service
+```bash 
+sudo systemctl enable iscsid
+sudo systemctl start iscsid
+```
 
-#### Label all control nodes
-Replace node names as needed:
+Install longhorn
 ```bash
-kubectl label node control01 node.longhorn.io/create-default-disk=config --overwrite
-kubectl label node control02 node.longhorn.io/create-default-disk=config --overwrite
+kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.6.2/deploy/longhorn.yaml
+```
+Adding Longhorn UI Access thoug ingress
+
+Adding http auth 
+'''bash
+ 2003  USER=admin
+ 2004  PASSWORD='changeme'
+ 2005  echo "${USER}:$(openssl passwd -stdin -apr1 <<< ${PASSWORD})" > auth
 ```
 
-#### Label all worker nodes
+Add the http auth file
 ```bash
-kubectl label node worker01 node.longhorn.io/create-default-disk=config --overwrite
-kubectl label node worker02 node.longhorn.io/create-default-disk=config --overwrite
-kubectl label node worker03 node.longhorn.io/create-default-disk=config --overwrite
-```
+ kubectl -n longhorn-system create secret generic longhorn-basic-auth --from-file=auth
+ ```
 
----
-
-### 8.5 Add default disk config annotations before installing Longhorn
-
-#### Control node annotation
-This creates one SSD disk tagged `ssd`.
-
+Ceate ingress file as longhorn-ingress.yaml
 ```bash
-kubectl annotate node control01 node.longhorn.io/default-disks-config='[
-  {
-    "name":"ssd-disk",
-    "path":"/mnt/longhorn-ssd",
-    "allowScheduling":true,
-    "storageReserved":10737418240,
-    "tags":["ssd"]
-  }
-]' --overwrite
-
-kubectl annotate node control02 node.longhorn.io/default-disks-config='[
-  {
-    "name":"ssd-disk",
-    "path":"/mnt/longhorn-ssd",
-    "allowScheduling":true,
-    "storageReserved":10737418240,
-    "tags":["ssd"]
-  }
-]' --overwrite
-```
-
-#### Worker node annotation
-This creates:
-- one SSD disk tagged `ssd`
-- one HDD disk tagged `bulk`
-
-```bash
-kubectl annotate node worker01 node.longhorn.io/default-disks-config='[
-  {
-    "name":"ssd-disk",
-    "path":"/mnt/longhorn-ssd",
-    "allowScheduling":true,
-    "storageReserved":10737418240,
-    "tags":["ssd"]
-  },
-  {
-    "name":"bulk-disk",
-    "path":"/mnt/longhorn-hdd",
-    "allowScheduling":true,
-    "storageReserved":21474836480,
-    "tags":["bulk"]
-  }
-]' --overwrite
-
-kubectl annotate node worker02 node.longhorn.io/default-disks-config='[
-  {
-    "name":"ssd-disk",
-    "path":"/mnt/longhorn-ssd",
-    "allowScheduling":true,
-    "storageReserved":10737418240,
-    "tags":["ssd"]
-  },
-  {
-    "name":"bulk-disk",
-    "path":"/mnt/longhorn-hdd",
-    "allowScheduling":true,
-    "storageReserved":21474836480,
-    "tags":["bulk"]
-  }
-]' --overwrite
-
-kubectl annotate node worker03 node.longhorn.io/default-disks-config='[
-  {
-    "name":"ssd-disk",
-    "path":"/mnt/longhorn-ssd",
-    "allowScheduling":true,
-    "storageReserved":10737418240,
-    "tags":["ssd"]
-  },
-  {
-    "name":"bulk-disk",
-    "path":"/mnt/longhorn-hdd",
-    "allowScheduling":true,
-    "storageReserved":21474836480,
-    "tags":["bulk"]
-  }
-]' --overwrite
-```
-
----
-
-### 8.6 Install Longhorn
-
-Install Longhorn:
-```bash
-kubectl apply -f https://raw.githubusercontent.com/longhorn/longhorn/v1.11.1/deploy/longhorn.yaml
-```
-
-Wait for pods:
-```bash
-kubectl get pods -n longhorn-system -w
-```
-
----
-
-### 8.7 Enable labeled-node disk creation
-
-After Longhorn is up, enable the setting that tells Longhorn to honor the node labels/annotations above:
-
-```bash
-kubectl -n longhorn-system patch settings.longhorn.io create-default-disk-labeled-nodes \
-  --type=merge \
-  -p '{"value":"true"}'
-```
-
-Check it:
-```bash
-kubectl -n longhorn-system get settings.longhorn.io create-default-disk-labeled-nodes
-```
-
----
-
-### 8.8 Verify disks
-
-Check Longhorn nodes:
-```bash
-kubectl get nodes.longhorn.io -n longhorn-system
-```
-
-Check in the UI later that:
-- control nodes have `ssd-disk`
-- worker nodes have `ssd-disk` and `bulk-disk`
-
----
-
-### 8.9 Expose the Longhorn UI for testing
-
-Fast test:
-```bash
-kubectl -n longhorn-system port-forward service/longhorn-frontend 8080:80
-```
-
-Open:
-```text
-http://localhost:8080
-```
-
----
-
-### 8.10 Create StorageClasses for SSD and bulk tiers
-
-Create `longhorn-ssd.yaml`:
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
+apiVersion: networking.k8s.io/v1
+kind: Ingress
 metadata:
-  name: longhorn-ssd
-provisioner: driver.longhorn.io
-allowVolumeExpansion: true
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
-parameters:
-  numberOfReplicas: "3"
-  staleReplicaTimeout: "30"
-  diskSelector: "ssd"
-  nodeSelector: ""
-  fsType: "ext4"
+  name: longhorn-ui
+  namespace: longhorn-system
+  annotations:
+    nginx.ingress.kubernetes.io/auth-type: basic
+    nginx.ingress.kubernetes.io/auth-secret: longhorn-basic-auth
+    nginx.ingress.kubernetes.io/auth-realm: "Longhorn Login"
+    nginx.ingress.kubernetes.io/proxy-body-size: "10000m"
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: longhorn.somedomain.local
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: longhorn-frontend
+                port:
+                  number: 80
 ```
-
-Create `longhorn-bulk.yaml`:
-```yaml
-apiVersion: storage.k8s.io/v1
-kind: StorageClass
-metadata:
-  name: longhorn-bulk
-provisioner: driver.longhorn.io
-allowVolumeExpansion: true
-reclaimPolicy: Delete
-volumeBindingMode: Immediate
-parameters:
-  numberOfReplicas: "3"
-  staleReplicaTimeout: "30"
-  diskSelector: "bulk"
-  nodeSelector: ""
-  fsType: "ext4"
-```
-
-Apply them:
+Apply the ingress
 ```bash
-kubectl apply -f longhorn-ssd.yaml
-kubectl apply -f longhorn-bulk.yaml
+kubectl apply -f longhorn-ingress.yaml
 ```
-
----
-
-### 8.11 Default StorageClass recommendation
-
-Keep only **one** default StorageClass in the cluster.
-
-Recommended:
-- make `longhorn-ssd` the default for general app workloads
-- keep `longhorn-bulk` non-default
-- remove default status from `local-path` if still set
-
-Example:
+Verrify
 ```bash
-kubectl patch storageclass local-path -p '{"metadata":{"annotations":{"storageclass.kubernetes.io/is-default-class":"false"}}}'
+kubectl get ingress -n longhorn-system
+kubectl get svc -n ingress-nginx
 ```
+After setting proper DNS you will be able to access it from your browser
 
----
 
-### 8.12 Notes
-
-- Use `longhorn-ssd` for configs, databases, and app data
-- Use `longhorn-bulk` for media, downloads, backups, and large datasets
-- Do not use the HDD tier for databases or latency-sensitive services
-- If you later move Longhorn to GitOps, these node labels/annotations and StorageClasses should live in your cluster bootstrap repo
 
 
 
