@@ -10,11 +10,18 @@ spec:
   source:
     repoURL: https://ansible-community.github.io/awx-operator-helm/
     chart: awx-operator
-    targetRevision: 3.2.0
+    targetRevision: 3.2.1
     helm:
       values: |
+        watchNamespaces:
+          - awx
+          - awx-dev
         # Keep defaults for now
         # (We manage the AWX instance separately in the next app)
+        kubeRbacProxy:
+          image:
+            repository: registry.k8s.io/kubebuilder/kube-rbac-proxy
+            tag: v0.19.1
   destination:
     server: https://kubernetes.default.svc
     namespace: awx
