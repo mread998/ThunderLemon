@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: awx-tls
   issuerRef:
-    name: selfsigned
+    name: letsencrypt-cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
     - awx.thundertest.org
