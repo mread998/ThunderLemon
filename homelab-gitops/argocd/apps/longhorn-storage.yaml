@@ -34,4 +34,4 @@ spec:
           tls: true
           tlsSecret: longhorn-tls
           annotations:
-            cert-manager.io/cluster-issuer: selfsigned
+            cert-manager.io/cluster-issuer: letsencrypt-cloudflare-prod

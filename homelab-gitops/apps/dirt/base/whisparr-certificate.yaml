@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: whisparr-tls
   issuerRef:
-    name: selfsigned
+    name: letsencrypt-cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
     - whisparr.thundertest.org

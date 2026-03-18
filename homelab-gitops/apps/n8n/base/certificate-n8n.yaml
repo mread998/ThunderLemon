@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: n8n-tls
   issuerRef:
-    name: selfsigned
+    name: letsencrypt-cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
     - n8n.thundertest.org

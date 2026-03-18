@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: paperless-tls
   issuerRef:
-    name: selfsigned
+    name: letsencrypt-cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
     - paperless.thundertest.org

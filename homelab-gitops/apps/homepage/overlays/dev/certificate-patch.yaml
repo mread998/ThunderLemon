@@ -5,7 +5,7 @@ metadata:
 spec:
   secretName: homepage-dev-tls
   issuerRef:
-    name: selfsigned
+    name: letsencrypt-cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
     - homepage-dev.thundertest.org
