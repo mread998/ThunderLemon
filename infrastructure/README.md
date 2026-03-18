@@ -143,7 +143,9 @@ The nginx stream module should be installed
 Nginx Config for LB. update ' to k3s k3s server ip
 ```nginx
 load_module /usr/lib/nginx/modules/ngx_stream_module.so;
-
+events {
+    worker_connections 1024;
+}
 stream {
     upstream k3s_api {
         server CONTROL_NODE_1_IP:6443;
