@@ -1,0 +1,11 @@
+---
+# Simple ping playbook
+# This can be run from AWX by creating a project pointing to this repo
+# and a job template that uses this playbook.
+
+- name: Ping all hosts
+  hosts: all
+  gather_facts: no
+  tasks:
+    - name: Ensure host is reachable
+      ansible.builtin.ping:

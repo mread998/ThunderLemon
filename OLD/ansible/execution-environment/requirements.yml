@@ -2,3 +2,6 @@
 collections:
   - name: community.general
     version: ">=8.0.0"
+  - name: ansible.posix
+  - name: kubernetes.core
+  - name: awx.awx

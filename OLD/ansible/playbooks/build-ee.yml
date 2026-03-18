@@ -1,0 +1,99 @@
+---
+# Build, push, and register a custom Execution Environment in AWX
+#
+# Prerequisites on the build host:
+#   pip install ansible-builder ansible-navigator
+#   podman or docker installed and logged into registry.thundertest.org
+#
+# Usage:
+#   ansible-playbook playbooks/build-ee.yml \
+#     -e ee_version=1.0.0 \
+#     -e awx_host=https://awx.thundertest.org \
+#     -e awx_token=<your_awx_token>
+#
+# Or store awx_host/awx_token in a vault file and pass -e @vault.yml
+
+- name: Build and push custom Execution Environment
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  vars:
+    ee_registry: registry.thundertest.org
+    ee_image_name: thunderlemon-ee
+    ee_version: "latest"
+    ee_build_context: "{{ playbook_dir }}/../execution-environment"
+    ee_tag: "{{ ee_registry }}/{{ ee_image_name }}:{{ ee_version }}"
+
+    awx_host: "https://awx.thundertest.org"
+    awx_token: "{{ lookup('env', 'AWX_TOKEN') }}"
+    awx_ee_name: "ThunderLemon EE"
+    awx_ee_description: "Custom EE with community.general, kubernetes.core, and awx.awx"
+
+  tasks:
+    - name: Build the Execution Environment image
+      ansible.builtin.command:
+        cmd: >
+          ansible-builder build
+          --file execution-environment.yml
+          --tag {{ ee_tag }}
+          --verbosity 2
+        chdir: "{{ ee_build_context }}"
+      register: build_result
+      changed_when: build_result.rc == 0
+
+    - name: Push image to registry
+      ansible.builtin.command:
+        cmd: podman push {{ ee_tag }}
+      register: push_result
+      changed_when: push_result.rc == 0
+
+    - name: Check if EE already exists in AWX
+      ansible.builtin.uri:
+        url: "{{ awx_host }}/api/v2/execution_environments/?name={{ awx_ee_name | urlencode }}"
+        method: GET
+        headers:
+          Authorization: "Bearer {{ awx_token }}"
+          Content-Type: "application/json"
+        validate_certs: true
+        status_code: 200
+      register: ee_lookup
+
+    - name: Create EE in AWX (if not exists)
+      ansible.builtin.uri:
+        url: "{{ awx_host }}/api/v2/execution_environments/"
+        method: POST
+        headers:
+          Authorization: "Bearer {{ awx_token }}"
+          Content-Type: "application/json"
+        body_format: json
+        body:
+          name: "{{ awx_ee_name }}"
+          description: "{{ awx_ee_description }}"
+          image: "{{ ee_tag }}"
+          pull: always
+        validate_certs: true
+        status_code: 201
+      when: ee_lookup.json.count == 0
+      register: ee_create
+
+    - name: Update EE in AWX (if exists)
+      ansible.builtin.uri:
+        url: "{{ awx_host }}/api/v2/execution_environments/{{ ee_lookup.json.results[0].id }}/"
+        method: PATCH
+        headers:
+          Authorization: "Bearer {{ awx_token }}"
+          Content-Type: "application/json"
+        body_format: json
+        body:
+          image: "{{ ee_tag }}"
+          pull: always
+        validate_certs: true
+        status_code: 200
+      when: ee_lookup.json.count > 0
+
+    - name: Summary
+      ansible.builtin.debug:
+        msg:
+          - "Image built and pushed: {{ ee_tag }}"
+          - "AWX EE '{{ awx_ee_name }}' {{ 'created' if ee_lookup.json.count == 0 else 'updated' }}"
