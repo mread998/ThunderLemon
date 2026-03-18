@@ -2,3 +2,8 @@
 all:
   hosts:
     10.11.11.48:
+
+  children:
+    storagevault:
+      hosts:
+        10.11.11.48:

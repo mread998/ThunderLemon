@@ -1,0 +1,68 @@
+---
+# Requires: community.general (community.general.lvg, community.general.lvol)
+# Install: ansible-galaxy collection install -r collections/requirements.yml
+
+- name: Configure LVM storage on storagevault
+  hosts: storagevault
+  become: true
+  gather_facts: true
+
+  vars:
+    vg_vault_disks:
+      - /dev/sdb
+      - /dev/sdc
+      - /dev/sdd
+      - /dev/sde
+    mount_point: /srv/vault
+    vg_vault: storage
+    lv_name: vault
+    lv_path: "/dev/{{ vg_vault }}/{{ lv_name }}"
+    fs_type: xfs
+
+  tasks:
+    - name: Ensure required packages are installed
+      ansible.builtin.package:
+        name:
+          - lvm2
+          - xfsprogs
+        state: present
+
+    - name: Ensure volume group exists
+      community.general.lvg:
+        vg: "{{ vg_vault }}"
+        pvs: "{{ vg_vault_disks }}"
+
+    - name: Ensure logical volume exists
+      community.general.lvol:
+        vg: "{{ vg_vault }}"
+        lv: "{{ lv_name }}"
+        size: 100%FREE
+        shrink: false
+
+    - name: Detect existing filesystem on logical volume
+      ansible.builtin.command: "lsblk -no FSTYPE {{ lv_path }}"
+      register: lv_fstype
+      changed_when: false
+      failed_when: false
+
+    - name: Create filesystem if not present
+      ansible.builtin.filesystem:
+        fstype: "{{ fs_type }}"
+        dev: "{{ lv_path }}"
+      when: (lv_fstype.stdout | trim) == ""
+
+    - name: Ensure mount directory exists
+      ansible.builtin.file:
+        path: "{{ mount_point }}"
+        state: directory
+        owner: root
+        group: root
+        mode: "0755"
+
+    - name: Mount volume and persist in fstab
+      ansible.builtin.mount:
+        path: "{{ mount_point }}"
+        src: "{{ lv_path }}"
+        fstype: "{{ fs_type }}"
+        opts: defaults
+        state: mounted
