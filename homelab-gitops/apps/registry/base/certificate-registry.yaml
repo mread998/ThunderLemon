@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: registry-tls
   issuerRef:
-    name: thundertest-ca
+    name: letsencrypt-cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
     - registry.thundertest.org
