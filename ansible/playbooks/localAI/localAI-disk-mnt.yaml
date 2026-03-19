@@ -64,7 +64,7 @@
       failed_when: sgdisk_out.rc != 0
       when: part_stat.stat.exists == false or force
 
-    - name: Inform: partition creation skipped (exists and not forcing)
+    - name: "Inform: partition creation skipped (exists and not forcing)"
       ansible.builtin.debug:
         msg: "Partition {{ part }} already exists; skipping sgdisk because force is not set."
       when: part_stat.stat.exists and not force
