@@ -57,8 +57,6 @@
         cmd: >-
           sgdisk --zap-all {{ device }} &&
           sgdisk -n 1:0:0 -t 1:8300 -c 1:"{{ label }}" {{ device }}
-      args:
-        warn: false
       register: sgdisk_out
       changed_when: sgdisk_out.rc == 0
       failed_when: sgdisk_out.rc != 0
@@ -72,8 +70,6 @@
     - name: Ensure kernel knows about partition table (partprobe)
       ansible.builtin.command:
         cmd: partprobe {{ device }}
-      args:
-        warn: false
       when: part_stat.stat.exists == false or force
       changed_when: false
 
