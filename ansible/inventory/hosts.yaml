@@ -2,8 +2,35 @@
 all:
   hosts:
     10.11.11.48:
+    10.11.11.70:
 
   children:
     storagevault:
       hosts:
         10.11.11.48:
+
+    local-ai:
+      hosts:
+        10.11.11.70:
+
+    kubeextras:
+      hosts:
+        10.11.11.60:
+        10.11.11.61:
+
+    kubecontorl:
+      hosts:
+        10.11.11.62:
+        10.11.11.63:
+
+    kubeworker:
+      hosts:
+        10.11.11.64:
+        10.11.11.65:
+        10.11.11.66:
+
+    proxmox-hosts:
+      hosts:
+        10.11.11.44:
+        10.11.11.45:
+        10.11.11.43:

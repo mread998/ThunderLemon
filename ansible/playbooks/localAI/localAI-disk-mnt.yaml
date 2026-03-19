@@ -4,7 +4,7 @@
 # To force destructive behavior set `force: true` when running (e.g. --extra-vars "force=true").
 
 - name: Partition, format and mount /dev/sdb -> /opt/ai-stack
-  hosts: all
+  hosts: local-ai
   become: true
   gather_facts: yes
 
