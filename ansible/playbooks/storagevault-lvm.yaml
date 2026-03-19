@@ -9,10 +9,11 @@
 
   vars:
     vg_vault_disks:
+      - /dev/sda
       - /dev/sdb
       - /dev/sdc
       - /dev/sdd
-      - /dev/sde
+      # - /dev/sde
     mount_point: /srv/vault
     vg_vault: storage
     lv_name: vault
