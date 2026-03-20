@@ -188,11 +188,13 @@ data:
         - Openwebui:
             description: Openwebui for local AI model hosting
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openwebui.png
-            href: https://ai.thundertest.org
+            # href: https://ai.thundertest.org
+            href: https://10.11.11.70:3000
         - Comfy:
             description: Comfy for local AI model hosting
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/comfy.png
-            href: https://comfy.thundertest.org
+            # href: https://comfy.thundertest.org
+            href: http://10.11.11.70:8188
         - ChatGPT:
             description: ChatGPT for AI chat
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png
