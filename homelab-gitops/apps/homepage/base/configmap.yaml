@@ -187,26 +187,26 @@ data:
     - AI Services:
         - Openwebui:
             description: Openwebui for local AI model hosting
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openwebui.png
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/ollama.png
             # href: https://ai.thundertest.org
-            href: https://10.11.11.70:3000
+            href: http://10.11.11.70:3000/auth?redirect=%2F
         - Comfy:
             description: Comfy for local AI model hosting
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/comfy.png
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/comfyui-dark.svg
             # href: https://comfy.thundertest.org
             href: http://10.11.11.70:8188
         - ChatGPT:
             description: ChatGPT for AI chat
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png
-            href: https://chat.thundertest.org
+            href: https://chatgpt.com/
         - Gemini:
             description: Gemini for AI chat
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gemini.png
-            href: https://gemini.thundertest.org
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/svg/google-gemini.svg
+            href: https://gemini.google.com/app
         - Claude:
             description: Claude for AI chat
-            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/claude.png
-            href: https://claude.thundertest.org
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/claude-ai.png
+            href: https://claude.ai/settings/claude-code
 
   widgets.yaml: |
     - resources:
