@@ -185,6 +185,10 @@ data:
             # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre.png
             # href: https://calibre.thundertest.org
     - AI Services:
+        - n8n:
+            description: n8n for workflow automation
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/n8n.png
+            href: https://n8n.thundertest.org
         - Openwebui:
             description: Openwebui for local AI model hosting
             icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/ollama.png
