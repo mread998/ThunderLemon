@@ -184,6 +184,27 @@ data:
             # description:
             # icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/calibre.png
             # href: https://calibre.thundertest.org
+    - AI Services:
+        - Openwebui:
+            description: Openwebui for local AI model hosting
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/openwebui.png
+            href: https://ai.thundertest.org
+        - Comfy:
+            description: Comfy for local AI model hosting
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/comfy.png
+            href: https://comfy.thundertest.org
+        - ChatGPT:
+            description: ChatGPT for AI chat
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/chatgpt.png
+            href: https://chat.thundertest.org
+        - Gemini:
+            description: Gemini for AI chat
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/gemini.png
+            href: https://gemini.thundertest.org
+        - Claude:
+            description: Claude for AI chat
+            icon: https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/claude.png
+            href: https://claude.thundertest.org
 
   widgets.yaml: |
     - resources:
