@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: wikijs-config
+  namespace: wikijs
+data:
+  DB_TYPE: "sqlite"
+  DB_FILEPATH: "/wiki/data/db.sqlite"
+  TZ: "UTC"
