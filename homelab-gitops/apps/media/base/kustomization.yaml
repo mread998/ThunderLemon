@@ -42,6 +42,10 @@ resources:
   - jellyfin-service.yaml
   - jellyfin-certificate.yaml
   - jellyfin-ingress.yaml
+  - navidrome-configmap.yaml
+  - navidrome-deployment.yaml
+  - navidrome-service.yaml
+  - navidrome-ingress.yaml
 
 commonLabels:
   app.kubernetes.io/name: media

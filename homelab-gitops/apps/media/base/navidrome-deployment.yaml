@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: navidrome
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: navidrome
+  template:
+    metadata:
+      labels:
+        app: navidrome
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: navidrome
+      containers:
+        - name: navidrome
+          image: deluan/navidrome:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 4533
+              name: http
+          envFrom:
+            - configMapRef:
+                name: navidrome-config
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "512Mi"
+              cpu: "500m"
+          volumeMounts:
+            - name: navidrome-config
+              mountPath: /data
+            - name: media-music
+              mountPath: /music
+              readOnly: true
+      volumes:
+        - name: navidrome-config
+          persistentVolumeClaim:
+            claimName: navidrome-config
+        - name: media-music
+          persistentVolumeClaim:
+            claimName: media-music
