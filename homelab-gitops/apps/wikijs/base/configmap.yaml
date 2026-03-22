@@ -5,9 +5,6 @@ metadata:
   namespace: wikijs
 data:
   TZ: "UTC"
-  config.yml: |
-    port: 3000
-    db:
-      type: sqlite
-      storage: /wiki/data/db.sqlite
-    logLevel: info
+  DB_TYPE: "postgres"
+  DB_HOST: "wikijs-postgres"
+  DB_PORT: "5432"

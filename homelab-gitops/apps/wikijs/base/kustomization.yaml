@@ -4,7 +4,10 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - configmap.yaml
-  - pvc.yaml
+  - wikijs-sealedsecrets.yaml
+  - postgres-pvc.yaml
+  - postgres-deployment.yaml
+  - postgres-service.yaml
   - deployment.yaml
   - service.yaml
   - certificate-wikijs.yaml
