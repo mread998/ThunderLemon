@@ -4,6 +4,10 @@ metadata:
   name: wikijs-config
   namespace: wikijs
 data:
-  DB_TYPE: "sqlite"
-  DB_FILEPATH: "/wiki/data/db.sqlite"
   TZ: "UTC"
+  config.yml: |
+    port: 3000
+    db:
+      type: sqlite
+      storage: /wiki/data/db.sqlite
+    logLevel: info
