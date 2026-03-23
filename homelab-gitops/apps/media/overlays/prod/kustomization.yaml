@@ -39,3 +39,7 @@ patches:
     target:
       kind: Deployment
       name: jellyfin
+  - path: navidrome-replicas.yaml
+    target:
+      kind: Deployment
+      name: navidrome

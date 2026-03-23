@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: navidrome-config
+  namespace: media
+data:
+  PUID: "1000"
+  PGID: "1000"
+  TZ: "UTC"
+  ND_PORT: "4533"
+  ND_LOGLEVEL: "info"
+  ND_SCANSCHEDULE: "@every 1h"
+  ND_SESSIONTIMEOUT: "24h"
+  ND_BASEURL: ""

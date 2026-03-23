@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wikijs
+  namespace: wikijs
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wikijs
+  template:
+    metadata:
+      labels:
+        app: wikijs
+    spec:
+      containers:
+        - name: wikijs
+          image: ghcr.io/requarks/wiki:2
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 3000
+              name: http
+          env:
+            - name: TZ
+              valueFrom:
+                configMapKeyRef:
+                  name: wikijs-config
+                  key: TZ
+            - name: DB_TYPE
+              valueFrom:
+                configMapKeyRef:
+                  name: wikijs-config
+                  key: DB_TYPE
+            - name: DB_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: wikijs-config
+                  key: DB_HOST
+            - name: DB_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: wikijs-config
+                  key: DB_PORT
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: wikijs-db-credentials
+                  key: POSTGRES_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: wikijs-db-credentials
+                  key: POSTGRES_PASSWORD
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: wikijs-db-credentials
+                  key: POSTGRES_DB
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+      volumes: []
