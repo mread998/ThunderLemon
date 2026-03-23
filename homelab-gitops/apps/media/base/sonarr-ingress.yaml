@@ -8,7 +8,7 @@ spec:
   tls:
     - hosts:
         - sonarr.thundertest.org
-      secretName: mealie-tls
+      secretName: sonarr-tls
   rules:
     - host: sonarr.thundertest.org
       http:
