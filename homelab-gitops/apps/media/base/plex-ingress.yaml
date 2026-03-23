@@ -20,3 +20,13 @@ spec:
                 name: plex
                 port:
                   number: 80
+    - host: plex.thundertest.org
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: plex
+                port:
+                  number: 32400
