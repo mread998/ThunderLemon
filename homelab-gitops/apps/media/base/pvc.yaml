@@ -118,66 +118,6 @@ spec:
     requests:
       storage: 20Gi
 
-# Downloads NFS Storage
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: media-downloads
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs-dev
-  resources:
-    requests:
-      storage: 500Gi
-
-# TV Shows NFS Storage
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: media-tv
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs-dev
-  resources:
-    requests:
-      storage: 1000Gi
-
-# Movies NFS Storage
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: media-movies
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs-dev
-  resources:
-    requests:
-      storage: 1000Gi
-
-# Music NFS Storage
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: media-music
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs-dev
-  resources:
-    requests:
-      storage: 500Gi
-
 # Configuration - Navidrome
 ---
 apiVersion: v1
@@ -192,5 +132,181 @@ spec:
   resources:
     requests:
       storage: 5Gi
+
+
+# Downloads NFS Storage
+---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: media-downloads
+#   namespace: media
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: nfs-dev
+#   resources:
+#     requests:
+#       storage: 500Gi
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-downloads-pv
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-static
+  mountOptions:
+    - nfsvers=4.1
+  nfs:
+    server: 10.11.11.48
+    path: /srv/media/downloads
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-downloads
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-static
+  volumeName: media-downloads-pv
+  resources:
+    requests:
+      storage: 500Gi
+
+# TV Shows NFS Storage
+---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: media-tv
+#   namespace: media
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: nfs-dev
+#   resources:
+#     requests:
+#       storage: 1000Gi
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-tv-pv
+spec:
+  capacity:
+    storage: 1000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-static
+  mountOptions:
+    - nfsvers=4.1
+  nfs:
+    server: 10.11.11.48
+    path: /srv/media/tv
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-tv
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-static
+  volumeName: media-tv-pv
+  resources:
+    requests:
+      storage: 1000Gi
+
+# Movies NFS Storage
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-movies-pv
+spec:
+  capacity:
+    storage: 1000Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-static
+  mountOptions:
+    - nfsvers=4.1
+  nfs:
+    server: 10.11.11.48
+    path: /srv/media/movies
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-movies
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-static
+  volumeName: media-movies-pv
+  resources:
+    requests:
+      storage: 1000Gi
+
+# Music NFS Storage
+---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: media-music
+#   namespace: media
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: nfs-dev
+#   resources:
+#     requests:
+#       storage: 500Gi
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: media-music-pv
+spec:
+  capacity:
+    storage: 500Gi
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-static
+  mountOptions:
+    - nfsvers=4.1
+  nfs:
+    server: 10.11.11.48
+    path: /srv/media/music
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: media-music
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-static
+  volumeName: media-music-pv
+  resources:
+    requests:
+      storage: 500Gi
+
 
 
