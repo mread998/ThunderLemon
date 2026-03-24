@@ -164,7 +164,7 @@ spec:
     - nfsvers=4.1
   nfs:
     server: 10.11.11.48
-    path: /srv/media/downloads
+    path: /srv/vault/downloads
 
 ---
 apiVersion: v1
@@ -211,7 +211,7 @@ spec:
     - nfsvers=4.1
   nfs:
     server: 10.11.11.48
-    path: /srv/media/tv
+    path: /srv/vault/tv
 
 ---
 apiVersion: v1
@@ -245,7 +245,7 @@ spec:
     - nfsvers=4.1
   nfs:
     server: 10.11.11.48
-    path: /srv/media/movies
+    path: /srv/vault/movies
 
 ---
 apiVersion: v1
@@ -291,7 +291,7 @@ spec:
     - nfsvers=4.1
   nfs:
     server: 10.11.11.48
-    path: /srv/media/music
+    path: /srv/vault/music
 
 ---
 apiVersion: v1
