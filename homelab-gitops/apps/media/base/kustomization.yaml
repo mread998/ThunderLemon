@@ -11,42 +11,42 @@ resources:
   - sonarr-service.yaml
   - sonarr-ingress.yaml
   - sonarr-certificate.yaml
-  - radarr-configmap.yaml
-  - radarr-deployment.yaml
-  - radarr-service.yaml
-  - radarr-ingress.yaml
-  - lidarr-configmap.yaml
+  # - radarr-configmap.yaml
+  # - radarr-deployment.yaml
+  # - radarr-service.yaml
+  # - radarr-ingress.yaml
+  # - lidarr-configmap.yaml
   # - lidarr-deployment.yaml
-  - lidarr-service.yaml
-  - lidarr-ingress.yaml
-  - bazarr-configmap.yaml
+  # - lidarr-service.yaml
+  # - lidarr-ingress.yaml
+  # - bazarr-configmap.yaml
   # - bazarr-deployment.yaml
-  - bazarr-service.yaml
-  - bazarr-ingress.yaml
-  - prowlarr-configmap.yaml
+  # - bazarr-service.yaml
+  # - bazarr-ingress.yaml
+  # - prowlarr-configmap.yaml
   # - prowlarr-deployment.yaml
-  - prowlarr-service.yaml
-  - prowlarr-ingress.yaml
-  - plex-configmap.yaml
+  # - prowlarr-service.yaml
+  # - prowlarr-ingress.yaml
+  # - plex-configmap.yaml
   # - plex-deployment.yaml
-  - plex-service.yaml
-  - plex-certificate.yaml
-  - plex-ingress.yaml
+  # - plex-service.yaml
+  # - plex-certificate.yaml
+  # - plex-ingress.yaml
   - sabnzbd-configmap.yaml
   - sabnzbd-sealedsecrets.yaml
   - sabnzbd-deployment.yaml
   - sabnzbd-service.yaml
   - sabnzbd-certificate.yaml
   - sabnzbd-ingress.yaml
-  - jellyfin-configmap.yaml
+  # - jellyfin-configmap.yaml
   # - jellyfin-deployment.yaml
-  - jellyfin-service.yaml
-  - jellyfin-certificate.yaml
-  - jellyfin-ingress.yaml
-  - navidrome-configmap.yaml
+  # - jellyfin-service.yaml
+  # - jellyfin-certificate.yaml
+  # - jellyfin-ingress.yaml
+  # - navidrome-configmap.yaml
   # - navidrome-deployment.yaml
-  - navidrome-service.yaml
-  - navidrome-ingress.yaml
+  # - navidrome-service.yaml
+  # - navidrome-ingress.yaml
 
 commonLabels:
   app.kubernetes.io/name: media
