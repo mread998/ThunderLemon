@@ -33,6 +33,7 @@ resources:
   # - plex-certificate.yaml
   # - plex-ingress.yaml
   - sabnzbd-configmap.yaml
+  - sabnzbd-init-configmap.yaml
   - sabnzbd-sealedsecrets.yaml
   - sabnzbd-deployment.yaml
   - sabnzbd-service.yaml
