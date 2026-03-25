@@ -21,11 +21,11 @@ resources:
   - lidarr-service.yaml
   - lidarr-ingress.yaml
   - lidarr-certificate.yaml
-  # - bazarr-certificate.yaml
-  # - bazarr-configmap.yaml
-  # - bazarr-deployment.yaml
-  # - bazarr-service.yaml
-  # - bazarr-ingress.yaml
+  - bazarr-certificate.yaml
+  - bazarr-configmap.yaml
+  - bazarr-deployment.yaml
+  - bazarr-service.yaml
+  - bazarr-ingress.yaml
   # - prowlarr-certificate.yaml
   # - prowlarr-configmap.yaml
   # - prowlarr-deployment.yaml

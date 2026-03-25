@@ -6,5 +6,5 @@ metadata:
 data:
   PUID: "1000"
   PGID: "1000"
-  TZ: "UTC"
+  TZ: "America/Chicago"
   PROWLARR_PORT: "9696"
