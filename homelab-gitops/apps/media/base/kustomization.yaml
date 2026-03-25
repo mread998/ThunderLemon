@@ -16,10 +16,11 @@ resources:
   - radarr-service.yaml
   - radarr-ingress.yaml
   - radarr-certificate.yaml
-  # - lidarr-configmap.yaml
-  # - lidarr-deployment.yaml
-  # - lidarr-service.yaml
-  # - lidarr-ingress.yaml
+  - lidarr-configmap.yaml
+  - lidarr-deployment.yaml
+  - lidarr-service.yaml
+  - lidarr-ingress.yaml
+  - lidarr-certificate.yaml
   # - bazarr-configmap.yaml
   # - bazarr-deployment.yaml
   # - bazarr-service.yaml

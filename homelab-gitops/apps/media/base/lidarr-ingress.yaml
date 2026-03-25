@@ -8,7 +8,7 @@ spec:
   tls:
     - hosts:
         - lidarr.thundertest.org
-      secretName: mealie-tls
+      secretName: lidarr-tls
   rules:
     - host: lidarr.thundertest.org
       http:
