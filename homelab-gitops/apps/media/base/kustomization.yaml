@@ -11,10 +11,11 @@ resources:
   - sonarr-service.yaml
   - sonarr-ingress.yaml
   - sonarr-certificate.yaml
-  # - radarr-configmap.yaml
-  # - radarr-deployment.yaml
-  # - radarr-service.yaml
-  # - radarr-ingress.yaml
+  - radarr-configmap.yaml
+  - radarr-deployment.yaml
+  - radarr-service.yaml
+  - radarr-ingress.yaml
+  - radarr-certificate.yaml
   # - lidarr-configmap.yaml
   # - lidarr-deployment.yaml
   # - lidarr-service.yaml

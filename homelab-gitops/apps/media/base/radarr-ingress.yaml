@@ -8,7 +8,7 @@ spec:
   tls:
     - hosts:
         - radarr.thundertest.org
-      secretName: mealie-tls
+      secretName: radarr-tls
   rules:
     - host: radarr.thundertest.org
       http:
