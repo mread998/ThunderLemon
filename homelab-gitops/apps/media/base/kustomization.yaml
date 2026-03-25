@@ -41,11 +41,11 @@ resources:
   - sabnzbd-service.yaml
   - sabnzbd-certificate.yaml
   - sabnzbd-ingress.yaml
-  # - jellyfin-configmap.yaml
-  # - jellyfin-deployment.yaml
-  # - jellyfin-service.yaml
-  # - jellyfin-certificate.yaml
-  # - jellyfin-ingress.yaml
+  - jellyfin-configmap.yaml
+  - jellyfin-deployment.yaml
+  - jellyfin-service.yaml
+  - jellyfin-certificate.yaml
+  - jellyfin-ingress.yaml
   # - navidrome-configmap.yaml
   # - navidrome-deployment.yaml
   # - navidrome-service.yaml
