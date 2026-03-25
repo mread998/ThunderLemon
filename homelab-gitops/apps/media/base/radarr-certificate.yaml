@@ -4,9 +4,9 @@ metadata:
   name: radarr-tls
   namespace: media
 spec:
-  secretName: sabnzbd-tls
+  secretName: radarr-tls
   issuerRef:
     name: letsencrypt-cloudflare-prod
     kind: ClusterIssuer
   dnsNames:
-    - sabnzbd.thundertest.org
+    - radarr.thundertest.org
