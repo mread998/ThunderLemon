@@ -6,6 +6,6 @@ metadata:
 data:
   PUID: "1000"
   PGID: "1000"
-  TZ: "UTC"
+  TZ: "America/Chicago"
   RADARR_PORT: "7878"
   RADARR_BRANCH: "master"
