@@ -324,19 +324,19 @@ spec:
       storage: 50Gi
 
 # Configuration - Whisparr
-# ---
-# apiVersion: v1
-# kind: PersistentVolumeClaim
-# metadata:
-#   name: whisparr-config
-#   namespace: media
-# spec:
-#   accessModes:
-#     - ReadWriteOnce
-#   storageClassName: longhorn
-#   resources:
-#     requests:
-#       storage: 5Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whisparr-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
 
 # Adult Content NFS Storage
 ---
