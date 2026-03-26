@@ -308,5 +308,62 @@ spec:
     requests:
       storage: 500Gi
 
+# Configuration - Stash
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: stash-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 50Gi
 
+# Configuration - Whisparr
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: whisparr-config
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
 
+# Adult Content NFS Storage
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dirt-content
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-dev
+  resources:
+    requests:
+      storage: 100Gi
+
+# Downloads NFS Storage (dirt)
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: dirt-downloads
+  namespace: media
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-dev
+  resources:
+    requests:
+      storage: 50Gi

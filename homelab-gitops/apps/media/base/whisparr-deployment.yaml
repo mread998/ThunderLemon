@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: whisparr
+  namespace: media
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: whisparr
+  template:
+    metadata:
+      labels:
+        app: whisparr
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app: whisparr
+      containers:
+        - name: whisparr
+          image: ghcr.io/hotio/whisparr:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 6969
+              name: http
+          envFrom:
+            - configMapRef:
+                name: whisparr-config
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+          volumeMounts:
+            - name: whisparr-config
+              mountPath: /config
+            - name: dirt-content
+              mountPath: /data
+            - name: dirt-downloads
+              mountPath: /downloads
+      volumes:
+        - name: whisparr-config
+          persistentVolumeClaim:
+            claimName: whisparr-config
+        - name: dirt-content
+          persistentVolumeClaim:
+            claimName: dirt-content
+        - name: dirt-downloads
+          persistentVolumeClaim:
+            claimName: dirt-downloads

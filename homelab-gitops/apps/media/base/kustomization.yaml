@@ -53,6 +53,16 @@ resources:
   - navidrome-service.yaml
   - navidrome-ingress.yaml
   - navidrome-certificate.yaml
+  - stash-configmap.yaml
+  - stash-deployment.yaml
+  - stash-service.yaml
+  - stash-certificate.yaml
+  - stash-ingress.yaml
+  - whisparr-configmap.yaml
+  - whisparr-deployment.yaml
+  - whisparr-service.yaml
+  - whisparr-certificate.yaml
+  - whisparr-ingress.yaml
 
 commonLabels:
   app.kubernetes.io/name: media
