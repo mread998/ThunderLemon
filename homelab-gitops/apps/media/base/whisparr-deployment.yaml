@@ -42,7 +42,7 @@ spec:
               mountPath: /config
             - name: dirt-content
               mountPath: /data
-            - name: dirt-downloads
+            - name: media-downloads
               mountPath: /downloads
       volumes:
         - name: whisparr-config
@@ -51,6 +51,6 @@ spec:
         - name: dirt-content
           persistentVolumeClaim:
             claimName: dirt-content
-        - name: dirt-downloads
+        - name: media-downloads
           persistentVolumeClaim:
             claimName: media-downloads
