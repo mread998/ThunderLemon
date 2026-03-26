@@ -354,16 +354,16 @@ spec:
       storage: 100Gi
 
 # Downloads NFS Storage (dirt)
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: dirt-downloads
-  namespace: media
-spec:
-  accessModes:
-    - ReadWriteMany
-  storageClassName: nfs-dev
-  resources:
-    requests:
-      storage: 50Gi
+# ---
+# apiVersion: v1
+# kind: PersistentVolumeClaim
+# metadata:
+#   name: dirt-downloads
+#   namespace: media
+# spec:
+#   accessModes:
+#     - ReadWriteMany
+#   storageClassName: nfs-dev
+#   resources:
+#     requests:
+#       storage: 50Gi
