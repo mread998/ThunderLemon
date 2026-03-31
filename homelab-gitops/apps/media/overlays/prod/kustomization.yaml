@@ -43,3 +43,11 @@ patches:
     target:
       kind: Deployment
       name: navidrome
+  - path: stash-replicas.yaml
+    target:
+      kind: Deployment
+      name: stash
+  - path: whisparr-replicas.yaml
+    target:
+      kind: Deployment
+      name: whisparr

@@ -50,10 +50,16 @@ spec:
               mountPath: /movies
             - name: media-music
               mountPath: /audio
+            - name: sabnzbd-init-scripts
+              mountPath: /custom-cont-init.d
       volumes:
         - name: sabnzbd-config
           persistentVolumeClaim:
             claimName: sabnzbd-config
+        - name: sabnzbd-init-scripts
+          configMap:
+            name: sabnzbd-init-scripts
+            defaultMode: 0755
         - name: media-downloads
           persistentVolumeClaim:
             claimName: media-downloads

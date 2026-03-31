@@ -1,22 +1,22 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: radarr
+  name: whisparr
   namespace: media
 spec:
   ingressClassName: nginx
   tls:
     - hosts:
-        - radarr.thundertest.org
-      secretName: radarr-tls
+        - whisparr.thundertest.org
+      secretName: whisparr-tls
   rules:
-    - host: radarr.thundertest.org
+    - host: whisparr.thundertest.org
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: radarr
+                name: whisparr
                 port:
                   number: 80

@@ -1,0 +1,12 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: stash-tls
+  namespace: media
+spec:
+  secretName: stash-tls
+  issuerRef:
+    name: letsencrypt-cloudflare-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - stash.thundertest.org

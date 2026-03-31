@@ -8,7 +8,7 @@ spec:
   tls:
     - hosts:
         - prowlarr.thundertest.org
-      secretName: mealie-tls
+      secretName: prowlarr-tls
   rules:
     - host: prowlarr.thundertest.org
       http:

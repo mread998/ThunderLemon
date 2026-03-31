@@ -10,18 +10,23 @@ resources:
   - sonarr-deployment.yaml
   - sonarr-service.yaml
   - sonarr-ingress.yaml
+  - sonarr-certificate.yaml
   - radarr-configmap.yaml
   - radarr-deployment.yaml
   - radarr-service.yaml
   - radarr-ingress.yaml
+  - radarr-certificate.yaml
   - lidarr-configmap.yaml
   - lidarr-deployment.yaml
   - lidarr-service.yaml
   - lidarr-ingress.yaml
+  - lidarr-certificate.yaml
+  - bazarr-certificate.yaml
   - bazarr-configmap.yaml
   - bazarr-deployment.yaml
   - bazarr-service.yaml
   - bazarr-ingress.yaml
+  - prowlarr-certificate.yaml
   - prowlarr-configmap.yaml
   - prowlarr-deployment.yaml
   - prowlarr-service.yaml
@@ -32,6 +37,7 @@ resources:
   - plex-certificate.yaml
   - plex-ingress.yaml
   - sabnzbd-configmap.yaml
+  - sabnzbd-init-configmap.yaml
   - sabnzbd-sealedsecrets.yaml
   - sabnzbd-deployment.yaml
   - sabnzbd-service.yaml
@@ -46,6 +52,17 @@ resources:
   - navidrome-deployment.yaml
   - navidrome-service.yaml
   - navidrome-ingress.yaml
+  - navidrome-certificate.yaml
+  - stash-configmap.yaml
+  - stash-deployment.yaml
+  - stash-service.yaml
+  - stash-certificate.yaml
+  - stash-ingress.yaml
+  - whisparr-configmap.yaml
+  - whisparr-deployment.yaml
+  - whisparr-service.yaml
+  - whisparr-certificate.yaml
+  - whisparr-ingress.yaml
 
 commonLabels:
   app.kubernetes.io/name: media

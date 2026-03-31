@@ -73,10 +73,10 @@ data:
             icon: jellyfin.png
             href: http://jellyfin.thundertest.org/
             description: Jellyfin for media streaming
-        # - Navidrome:
-        #     icon: navidrome.png
-        #     href: http://navidrome.thundertest.org/
-        #     description: Navidrome for music streaming
+        - Navidrome:
+            icon: navidrome.png
+            href: http://navidrome.thundertest.org/
+            description: Navidrome for music streaming
         - Stashapp:
             icon: stash.png
             href: http://stash.thundertest.org/
