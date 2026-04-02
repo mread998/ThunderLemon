@@ -1,0 +1,22 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - certificate-grafana.yaml
+  - configmap.yaml
+  - deployment.yaml
+  - ingress.yaml
+  - namespace.yaml
+  - pvc.yaml
+  - service.yaml
+  - prometheus-configmap.yaml
+  - prometheus-pvc.yaml
+  - prometheus-deployment.yaml
+  - prometheus-service.yaml
+  - alertmanager-configmap.yaml
+  - alertmanager-pvc.yaml
+  - alertmanager-deployment.yaml
+  - alertmanager-service.yaml
+  - node-exporter.yaml
+  - kube-state-metrics.yaml
+  - grafana-datasource.yaml
