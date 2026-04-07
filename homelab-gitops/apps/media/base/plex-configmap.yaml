@@ -8,5 +8,5 @@ data:
   PGID: "1000"
   TZ: "America/Chicago"
   VERSION: "docker"
-  PLEX_CLAIM: "claim-k6Vo8RdKTqbd7vBQgwKH"
+  PLEX_CLAIM: "claim-Y8fHrBHcqkLFtd7fv83x"
   ADVERTISE_IP: "https://plex.thundertest.org:443"
