@@ -354,7 +354,7 @@ spec:
       storage: 100Gi
 
 # Downloads NFS Storage (dirt)
-# ---
+---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
